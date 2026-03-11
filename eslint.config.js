@@ -1,5 +1,5 @@
 //  @ts-check
 
-import { tanstackConfig } from "@tanstack/eslint-config"
+import antfu from '@antfu/eslint-config'
 
-export default [...tanstackConfig]
+export default antfu()
