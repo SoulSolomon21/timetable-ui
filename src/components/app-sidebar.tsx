@@ -1,4 +1,4 @@
-import { CameraIcon, ChartBarIcon, CircleHelpIcon, CommandIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, FileTextIcon, FolderIcon, LayoutDashboardIcon, ListIcon, SearchIcon, Settings2Icon, UsersIcon } from 'lucide-react'
+import { BookIcon, CameraIcon, ChartBarIcon, CircleHelpIcon, CommandIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, FileTextIcon, FolderIcon, LayoutDashboardIcon, SearchIcon, Settings2Icon, UsersIcon } from 'lucide-react'
 
 import * as React from 'react'
 import { NavDocuments } from '@/components/nav-documents'
@@ -30,10 +30,10 @@ const data = {
       ),
     },
     {
-      title: 'Lifecycle',
-      url: '#',
+      title: 'Programs',
+      url: '/dashboard/programs',
       icon: (
-        <ListIcon />
+        <BookIcon />
       ),
     },
     {
