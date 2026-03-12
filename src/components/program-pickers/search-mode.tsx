@@ -1,12 +1,11 @@
 import type { FlatEntry } from './utils'
-import { Check, MapPin, Search, X } from 'lucide-react'
+import { Check, MapPin } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Badge } from '../ui/badge'
-import { Button } from '../ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command'
-import { FACULTY_TYPE_COLORS, toTitleCase } from './utils'
 import { Separator } from '../ui/separator'
+import { FACULTY_TYPE_COLORS, toTitleCase } from './utils'
 
 interface Props {
   flatOptions: FlatEntry[]
@@ -41,12 +40,8 @@ function SearchMode({ flatOptions, onSelect, selected }: Props) {
             placeholder="Try 'Computing Kampala' or 'Public Health'…"
             value={query}
             onValueChange={setQuery}
+            className="h-11 min-w-full text-sm border-none focus:ring-0 placeholder:text-stone-400"
           />
-          {/* {query && (
-            <Button size={"icon-sm"} onClick={() => setQuery('')}>
-              <X className="h-3.5 w-3.5" />
-            </Button>
-          )} */}
         </div>
         <Separator />
         <CommandList className="max-h-72 overflow-y-auto">

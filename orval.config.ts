@@ -20,7 +20,7 @@ export default defineConfig({
       },
     },
     hooks: {
-      afterAllFilesWrite: 'eslint --fix'
+      afterAllFilesWrite: 'eslint --fix',
     },
   },
 })

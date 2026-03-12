@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import ProgramPicker from '@/components/program-picker'
-import { useGetDepartments, useGetRooms } from '@/utils/api'
-import SearchMode from '@/components/program-pickers/search-mode'
+import { useGetDepartments } from '@/utils/api'
 
 export const Route = createFileRoute('/dashboard/programs')({
   component: RouteComponent,
