@@ -10,7 +10,7 @@ import { FACULTY_TYPE_COLORS, toTitleCase } from './utils'
 interface Props {
   flatOptions: FlatEntry[]
   onSelect: (item: FlatEntry) => void
-  selected: FlatEntry
+  selected: FlatEntry | null
 }
 
 type GroupedPrograms = Record<string, FlatEntry[]>
