@@ -13,7 +13,7 @@ interface Props {
   selected: FlatEntry | null
 }
 
-type GroupedPrograms = Record<string, FlatEntry[]>
+export type GroupedPrograms = Record<string, FlatEntry[]>
 
 function SearchMode({ flatOptions, onSelect, selected }: Props) {
   const [query, setQuery] = useState('')
@@ -33,91 +33,68 @@ function SearchMode({ flatOptions, onSelect, selected }: Props) {
   const totalResults = Object.values(grouped).reduce((s, g) => s + g.length, 0)
 
   return (
-    <div>
-      <Command className="rounded-xl border border-stone-200 shadow-sm bg-white overflow-visible space-y-2">
-        <div className="">
-          <CommandInput
-            placeholder="Try 'Computing Kampala' or 'Public Health'…"
-            value={query}
-            onValueChange={setQuery}
-            className="h-11 min-w-full text-sm border-none focus:ring-0 placeholder:text-stone-400"
-          />
-        </div>
-        <Separator />
-        <CommandList className="max-h-72 overflow-y-auto">
-          {query.trim() === '' && (
-            <div className="py-10 text-center text-sm">
-              Start typing to search…
-            </div>
-          )}
+    <Command className="max-w rounded-lg border space-y-2">
+      <CommandInput
+        value={query}
+        onValueChange={setQuery}
+        placeholder="Try 'Computing Kampala' or 'Public Health'…"
+      />
+      <CommandList>
+        <CommandEmpty className="py-8 text-sm text-center">
+          No results
           {query.trim() !== '' && totalResults === 0 && (
-            <CommandEmpty className="py-8 text-sm text-center">
-              No results for "
-              {query}
-              "
-            </CommandEmpty>
+            ` for "${query}"`
           )}
-          {Object.entries(grouped).map(([campus, items]) => (
-            <CommandGroup
-              key={campus}
-              heading={(
-                <div className="flex items-center gap-1.5 py-1">
-                  <MapPin className="h-3 w-3" />
-                  <span className="text-[11px] font-semibold tracking-widest uppercase text-stone-500">
-                    {toTitleCase(campus)}
-                  </span>
-                  <span className="ml-auto text-[10px] font-normal">{items.length}</span>
-                </div>
-              )}
-            >
-              {
-                items.map(item => (
-                  <CommandItem
-                    key={item.id}
-                    value={`${item.id}-${item.searchText}`}
-                    onSelect={() => onSelect(item)}
-                    className={cn(
-                      'flex items-start gap-3 px-3 py-2.5 cursor-pointer rounded-lg mx-1 mb-0.5',
-                      'hover:bg-stone-50 aria-selected:bg-teal-50',
-                      selected?.id === item.id && 'bg-teal-50',
-                    )}
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-stone-800 truncate">
-                          {toTitleCase(item.department)}
-                        </span>
-                        {item.facultyType && (
-                          <Badge
-                            variant="outline"
-                            className={cn(
-                              'text-[10px] px-1.5 py-0 h-4 font-medium border shrink-0',
-                              FACULTY_TYPE_COLORS[item.facultyType],
-                            )}
-                          >
-                            {item.facultyType}
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-xs text-stone-400 truncate mt-0.5">{item.faculty}</p>
-                    </div>
-                    {selected?.id === item.id && <Check className="h-3.5 w-3.5 text-teal-600 mt-0.5 shrink-0" />}
-                  </CommandItem>
-                ))
-              }
-            </CommandGroup>
-          ))}
-        </CommandList>
-      </Command>
+        </CommandEmpty>
+        {Object.entries(grouped).map(([campus, items]) => (
+          <CommandGroup
+            key={campus}
+            heading={(
+              <div className="flex items-center gap-1.5 py-1">
+                <MapPin className="h-3 w-3" />
+                <span className="text-[11px] font-semibold tracking-widest uppercase text-stone-500">
+                  {toTitleCase(campus)}
+                </span>
+                <span className="ml-auto text-[10px] font-normal">{items.length}</span>
+              </div>
+            )}
+          >
+            {
+              items.map(item => (
+                <CommandItem
+                  key={item.id}
+                  value={`${item.id}-${item.searchText}`}
+                  onSelect={() => onSelect(item)}
+                  className={cn(
+                    'group rounded-md flex justify-between items-center w-full text-[0.8125rem] leading-normal text-primary gap-4 cursor-pointer p-3 m-1',
+                    "aria-checked:bg-accent-foreground/50",
+                    selected?.id === item.id && 'bg-accent-foreground/10',
+                  )}
+                >
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm font-medium truncate">
+                      {toTitleCase(item.department)}
+                    </span>
+                    <p className="text-xs text-accent-foreground truncate mt-0.5">{item.faculty}</p>
+                  </div>
+                  <div className="flex items-center">
+                    {selected?.id === item.id && <Check className="mr-3 size-4 " />}
+                  </div>
+                </CommandItem>
+              ))
+            }
+          </CommandGroup>
+        ))}
+      </CommandList>
       {query.trim() !== '' && totalResults > 0 && (
-        <p className="text-xs text-stone-400 text-right">
+        <p className="text-xs text-accent-foreground text-right p-1.5">
           {totalResults}
           {' '}
           result
           {totalResults !== 1 ? 's' : ''}
         </p>
       )}
-    </div>
+    </Command>
   )
 }
 
