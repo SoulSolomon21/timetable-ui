@@ -11,7 +11,7 @@ export default defineConfig({
       target: 'src/utils/api.ts',
       schemas: 'src/utils/models',
       client: 'react-query',
-      httpClient: 'axios',
+      httpClient: 'fetch',
       mode: 'split',
       namingConvention: 'kebab-case',
       baseUrl: `${apiUrl}`,
