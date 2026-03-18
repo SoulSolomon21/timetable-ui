@@ -12,8 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
-import { Route as DashboardProgramsIndexRouteImport } from './routes/dashboard/programs/index'
-import { Route as DashboardProgramsProgramIdRouteImport } from './routes/dashboard/programs/$programId'
+import { Route as DashboardDepartmentsIndexRouteImport } from './routes/dashboard/departments/index'
+import { Route as DashboardDepartmentsDepartmentIdRouteImport } from './routes/dashboard/departments/$departmentId'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
@@ -30,15 +30,16 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
-const DashboardProgramsIndexRoute = DashboardProgramsIndexRouteImport.update({
-  id: '/programs/',
-  path: '/programs/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardProgramsProgramIdRoute =
-  DashboardProgramsProgramIdRouteImport.update({
-    id: '/programs/$programId',
-    path: '/programs/$programId',
+const DashboardDepartmentsIndexRoute =
+  DashboardDepartmentsIndexRouteImport.update({
+    id: '/departments/',
+    path: '/departments/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
+const DashboardDepartmentsDepartmentIdRoute =
+  DashboardDepartmentsDepartmentIdRouteImport.update({
+    id: '/departments/$departmentId',
+    path: '/departments/$departmentId',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
 
@@ -46,22 +47,22 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/programs/$programId': typeof DashboardProgramsProgramIdRoute
-  '/dashboard/programs/': typeof DashboardProgramsIndexRoute
+  '/dashboard/departments/$departmentId': typeof DashboardDepartmentsDepartmentIdRoute
+  '/dashboard/departments/': typeof DashboardDepartmentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardIndexRoute
-  '/dashboard/programs/$programId': typeof DashboardProgramsProgramIdRoute
-  '/dashboard/programs': typeof DashboardProgramsIndexRoute
+  '/dashboard/departments/$departmentId': typeof DashboardDepartmentsDepartmentIdRoute
+  '/dashboard/departments': typeof DashboardDepartmentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/programs/$programId': typeof DashboardProgramsProgramIdRoute
-  '/dashboard/programs/': typeof DashboardProgramsIndexRoute
+  '/dashboard/departments/$departmentId': typeof DashboardDepartmentsDepartmentIdRoute
+  '/dashboard/departments/': typeof DashboardDepartmentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -69,21 +70,21 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/dashboard/'
-    | '/dashboard/programs/$programId'
-    | '/dashboard/programs/'
+    | '/dashboard/departments/$departmentId'
+    | '/dashboard/departments/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
-    | '/dashboard/programs/$programId'
-    | '/dashboard/programs'
+    | '/dashboard/departments/$departmentId'
+    | '/dashboard/departments'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
     | '/dashboard/'
-    | '/dashboard/programs/$programId'
-    | '/dashboard/programs/'
+    | '/dashboard/departments/$departmentId'
+    | '/dashboard/departments/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -114,18 +115,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/programs/': {
-      id: '/dashboard/programs/'
-      path: '/programs'
-      fullPath: '/dashboard/programs/'
-      preLoaderRoute: typeof DashboardProgramsIndexRouteImport
+    '/dashboard/departments/': {
+      id: '/dashboard/departments/'
+      path: '/departments'
+      fullPath: '/dashboard/departments/'
+      preLoaderRoute: typeof DashboardDepartmentsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
-    '/dashboard/programs/$programId': {
-      id: '/dashboard/programs/$programId'
-      path: '/programs/$programId'
-      fullPath: '/dashboard/programs/$programId'
-      preLoaderRoute: typeof DashboardProgramsProgramIdRouteImport
+    '/dashboard/departments/$departmentId': {
+      id: '/dashboard/departments/$departmentId'
+      path: '/departments/$departmentId'
+      fullPath: '/dashboard/departments/$departmentId'
+      preLoaderRoute: typeof DashboardDepartmentsDepartmentIdRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
   }
@@ -133,14 +134,14 @@ declare module '@tanstack/react-router' {
 
 interface DashboardRouteRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardProgramsProgramIdRoute: typeof DashboardProgramsProgramIdRoute
-  DashboardProgramsIndexRoute: typeof DashboardProgramsIndexRoute
+  DashboardDepartmentsDepartmentIdRoute: typeof DashboardDepartmentsDepartmentIdRoute
+  DashboardDepartmentsIndexRoute: typeof DashboardDepartmentsIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
-  DashboardProgramsProgramIdRoute: DashboardProgramsProgramIdRoute,
-  DashboardProgramsIndexRoute: DashboardProgramsIndexRoute,
+  DashboardDepartmentsDepartmentIdRoute: DashboardDepartmentsDepartmentIdRoute,
+  DashboardDepartmentsIndexRoute: DashboardDepartmentsIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

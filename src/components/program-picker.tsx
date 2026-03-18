@@ -53,7 +53,7 @@ function SelectionPreview({ selected, onClear }: SelectionPreviewProps) {
 }
 
 // ─── Root Component ───────────────────────────────────────────────────────────
-export default function ProgramPicker() {
+export default function DepartmentPicker() {
   const [mode, setMode] = useState('search')
   const [selected, setSelected] = useState<FlatEntry | null>(null)
   const { data } = useGetDepartments()
@@ -62,7 +62,7 @@ export default function ProgramPicker() {
   const departmentsList = data?.data
 
   const handleConfirm = () => {
-    navigate({ to: '/dashboard/programs/$programId', params: { programId: `${selected?.id}` } })
+    navigate({ to: '/dashboard/departments/$departmentId', params: { departmentId: `${selected?.id}` } })
   }
 
   if (!departmentsList) {

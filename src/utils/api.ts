@@ -16,8 +16,10 @@ import type {
   ApprovedAssignment,
   ConflictSummaryView,
   CreateTimetableRequest,
-  GetAllAsignmentsParams,
+  GetAllAssignmentsParams,
+  GetCohortsParams,
   LegacyCampusRoomGroup,
+  LegacyCohortResponse,
   LegacyDepartmentResponse,
   LegacyLessonSlotGroup,
   ListTimetablesParams,
@@ -1130,18 +1132,115 @@ export function useGetDepartments<TData = Awaited<ReturnType<typeof getDepartmen
   return { ...query, queryKey: queryOptions.queryKey }
 }
 
-export interface getAllAsignmentsResponse200 {
+export interface getCohortsResponse200 {
+  data: LegacyCohortResponse[]
+  status: 200
+}
+
+export type getCohortsResponseSuccess = (getCohortsResponse200) & {
+  headers: Headers
+}
+
+export type getCohortsResponse = (getCohortsResponseSuccess)
+
+export function getGetCohortsUrl(params: GetCohortsParams) {
+  const normalizedParams = new URLSearchParams()
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  })
+
+  const stringifiedParams = normalizedParams.toString()
+
+  return stringifiedParams.length > 0 ? `http://localhost:8080/api/acl/cohorts?${stringifiedParams}` : `http://localhost:8080/api/acl/cohorts`
+}
+
+export async function getCohorts(params: GetCohortsParams, options?: RequestInit): Promise<getCohortsResponse> {
+  const res = await fetch(getGetCohortsUrl(params), {
+    ...options,
+    method: 'GET',
+
+  })
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+
+  const data: getCohortsResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as getCohortsResponse
+}
+
+export function getGetCohortsQueryKey(params?: GetCohortsParams) {
+  return [
+    `http://localhost:8080/api/acl/cohorts`,
+    ...(params ? [params] : []),
+  ] as const
+}
+
+export function getGetCohortsQueryOptions<TData = Awaited<ReturnType<typeof getCohorts>>, TError = unknown>(params: GetCohortsParams, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getCohorts>>, TError, TData>>, fetch?: RequestInit }) {
+  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
+
+  const queryKey = queryOptions?.queryKey ?? getGetCohortsQueryKey(params)
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getCohorts>>> = ({ signal }) => getCohorts(params, { signal, ...fetchOptions })
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<Awaited<ReturnType<typeof getCohorts>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCohortsQueryResult = NonNullable<Awaited<ReturnType<typeof getCohorts>>>
+export type GetCohortsQueryError = unknown
+
+export function useGetCohorts<TData = Awaited<ReturnType<typeof getCohorts>>, TError = unknown>(
+  params: GetCohortsParams, options: { query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getCohorts>>, TError, TData>> & Pick<
+    DefinedInitialDataOptions<
+      Awaited<ReturnType<typeof getCohorts>>,
+      TError,
+      Awaited<ReturnType<typeof getCohorts>>
+    >,
+    'initialData'
+  >, fetch?: RequestInit },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetCohorts<TData = Awaited<ReturnType<typeof getCohorts>>, TError = unknown>(
+  params: GetCohortsParams, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getCohorts>>, TError, TData>> & Pick<
+    UndefinedInitialDataOptions<
+      Awaited<ReturnType<typeof getCohorts>>,
+      TError,
+      Awaited<ReturnType<typeof getCohorts>>
+    >,
+    'initialData'
+  >, fetch?: RequestInit },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetCohorts<TData = Awaited<ReturnType<typeof getCohorts>>, TError = unknown>(
+  params: GetCohortsParams, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getCohorts>>, TError, TData>>, fetch?: RequestInit },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetCohorts<TData = Awaited<ReturnType<typeof getCohorts>>, TError = unknown>(
+  params: GetCohortsParams,
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getCohorts>>, TError, TData>>, fetch?: RequestInit },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetCohortsQueryOptions(params, options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+  return { ...query, queryKey: queryOptions.queryKey }
+}
+
+export interface getAllAssignmentsResponse200 {
   data: ApprovedAssignment[]
   status: 200
 }
 
-export type getAllAsignmentsResponseSuccess = (getAllAsignmentsResponse200) & {
+export type getAllAssignmentsResponseSuccess = (getAllAssignmentsResponse200) & {
   headers: Headers
 }
 
-export type getAllAsignmentsResponse = (getAllAsignmentsResponseSuccess)
+export type getAllAssignmentsResponse = (getAllAssignmentsResponseSuccess)
 
-export function getGetAllAsignmentsUrl(params: GetAllAsignmentsParams) {
+export function getGetAllAssignmentsUrl(params: GetAllAssignmentsParams) {
   const normalizedParams = new URLSearchParams()
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -1155,8 +1254,8 @@ export function getGetAllAsignmentsUrl(params: GetAllAsignmentsParams) {
   return stringifiedParams.length > 0 ? `http://localhost:8080/api/acl/assignments?${stringifiedParams}` : `http://localhost:8080/api/acl/assignments`
 }
 
-export async function getAllAsignments(params: GetAllAsignmentsParams, options?: RequestInit): Promise<getAllAsignmentsResponse> {
-  const res = await fetch(getGetAllAsignmentsUrl(params), {
+export async function getAllAssignments(params: GetAllAssignmentsParams, options?: RequestInit): Promise<getAllAssignmentsResponse> {
+  const res = await fetch(getGetAllAssignmentsUrl(params), {
     ...options,
     method: 'GET',
 
@@ -1164,63 +1263,63 @@ export async function getAllAsignments(params: GetAllAsignmentsParams, options?:
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
 
-  const data: getAllAsignmentsResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getAllAsignmentsResponse
+  const data: getAllAssignmentsResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as getAllAssignmentsResponse
 }
 
-export function getGetAllAsignmentsQueryKey(params?: GetAllAsignmentsParams) {
+export function getGetAllAssignmentsQueryKey(params?: GetAllAssignmentsParams) {
   return [
     `http://localhost:8080/api/acl/assignments`,
     ...(params ? [params] : []),
   ] as const
 }
 
-export function getGetAllAsignmentsQueryOptions<TData = Awaited<ReturnType<typeof getAllAsignments>>, TError = unknown>(params: GetAllAsignmentsParams, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAsignments>>, TError, TData>>, fetch?: RequestInit }) {
+export function getGetAllAssignmentsQueryOptions<TData = Awaited<ReturnType<typeof getAllAssignments>>, TError = unknown>(params: GetAllAssignmentsParams, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAssignments>>, TError, TData>>, fetch?: RequestInit }) {
   const { query: queryOptions, fetch: fetchOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getGetAllAsignmentsQueryKey(params)
+  const queryKey = queryOptions?.queryKey ?? getGetAllAssignmentsQueryKey(params)
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllAsignments>>> = ({ signal }) => getAllAsignments(params, { signal, ...fetchOptions })
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllAssignments>>> = ({ signal }) => getAllAssignments(params, { signal, ...fetchOptions })
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<Awaited<ReturnType<typeof getAllAsignments>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<Awaited<ReturnType<typeof getAllAssignments>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetAllAsignmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getAllAsignments>>>
-export type GetAllAsignmentsQueryError = unknown
+export type GetAllAssignmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getAllAssignments>>>
+export type GetAllAssignmentsQueryError = unknown
 
-export function useGetAllAsignments<TData = Awaited<ReturnType<typeof getAllAsignments>>, TError = unknown>(
-  params: GetAllAsignmentsParams, options: { query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAsignments>>, TError, TData>> & Pick<
+export function useGetAllAssignments<TData = Awaited<ReturnType<typeof getAllAssignments>>, TError = unknown>(
+  params: GetAllAssignmentsParams, options: { query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAssignments>>, TError, TData>> & Pick<
     DefinedInitialDataOptions<
-      Awaited<ReturnType<typeof getAllAsignments>>,
+      Awaited<ReturnType<typeof getAllAssignments>>,
       TError,
-      Awaited<ReturnType<typeof getAllAsignments>>
+      Awaited<ReturnType<typeof getAllAssignments>>
     >,
     'initialData'
   >, fetch?: RequestInit },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllAsignments<TData = Awaited<ReturnType<typeof getAllAsignments>>, TError = unknown>(
-  params: GetAllAsignmentsParams, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAsignments>>, TError, TData>> & Pick<
+export function useGetAllAssignments<TData = Awaited<ReturnType<typeof getAllAssignments>>, TError = unknown>(
+  params: GetAllAssignmentsParams, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAssignments>>, TError, TData>> & Pick<
     UndefinedInitialDataOptions<
-      Awaited<ReturnType<typeof getAllAsignments>>,
+      Awaited<ReturnType<typeof getAllAssignments>>,
       TError,
-      Awaited<ReturnType<typeof getAllAsignments>>
+      Awaited<ReturnType<typeof getAllAssignments>>
     >,
     'initialData'
   >, fetch?: RequestInit },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAllAsignments<TData = Awaited<ReturnType<typeof getAllAsignments>>, TError = unknown>(
-  params: GetAllAsignmentsParams, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAsignments>>, TError, TData>>, fetch?: RequestInit },
+export function useGetAllAssignments<TData = Awaited<ReturnType<typeof getAllAssignments>>, TError = unknown>(
+  params: GetAllAssignmentsParams, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAssignments>>, TError, TData>>, fetch?: RequestInit },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetAllAsignments<TData = Awaited<ReturnType<typeof getAllAsignments>>, TError = unknown>(
-  params: GetAllAsignmentsParams,
-  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAsignments>>, TError, TData>>, fetch?: RequestInit },
+export function useGetAllAssignments<TData = Awaited<ReturnType<typeof getAllAssignments>>, TError = unknown>(
+  params: GetAllAssignmentsParams,
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllAssignments>>, TError, TData>>, fetch?: RequestInit },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetAllAsignmentsQueryOptions(params, options)
+  const queryOptions = getGetAllAssignmentsQueryOptions(params, options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 

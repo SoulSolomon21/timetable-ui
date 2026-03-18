@@ -5,6 +5,7 @@
  * OpenAPI spec version: v0
  */
 
-export interface GetAllAsignmentsParams {
+export interface GetCohortsParams {
+  departmentId: number
   semesterId: number
 }
