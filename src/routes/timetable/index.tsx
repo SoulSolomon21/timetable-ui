@@ -1,11 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
-
 import { StatsCards } from '@/components/stats-cards'
 import WorkQueue from '@/features/dashboard/components/work-queue'
 
-export const Route = createFileRoute('/dashboard/')({ component: Page })
+export const Route = createFileRoute('/timetable/')({
+  component: RouteComponent,
+})
 
-export default function Page() {
+function RouteComponent() {
   return (
     <>
       <StatsCards />

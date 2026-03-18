@@ -1,4 +1,4 @@
-import { BookIcon, LayoutDashboardIcon } from 'lucide-react'
+import { BookIcon, CalendarDays, LayoutDashboardIcon } from 'lucide-react'
 
 export const routeMapping = {
   user: {
@@ -12,6 +12,13 @@ export const routeMapping = {
       url: '/dashboard',
       icon: (
         <LayoutDashboardIcon />
+      ),
+    },
+    {
+      title: 'Scheduling',
+      url: '/timetable',
+      icon: (
+        <CalendarDays />
       ),
     },
     {

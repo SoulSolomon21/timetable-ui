@@ -1,6 +1,7 @@
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Breadcrumbs } from './breadcrumbs'
+import { SemesterCombobox } from './semester-search'
 
 export function SiteHeader() {
   return (
@@ -12,6 +13,9 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-8"
         />
         <Breadcrumbs />
+        <div className="ml-auto flex items-center gap-2">
+          <SemesterCombobox />
+        </div>
       </div>
     </header>
   )

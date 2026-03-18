@@ -9,12 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TimetableRouteRouteImport } from './routes/timetable/route'
 import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TimetableIndexRouteImport } from './routes/timetable/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as TimetableDepartmentIdRouteRouteImport } from './routes/timetable/$departmentId/route'
+import { Route as TimetableDepartmentIdIndexRouteImport } from './routes/timetable/$departmentId/index'
 import { Route as DashboardDepartmentsIndexRouteImport } from './routes/dashboard/departments/index'
+import { Route as TimetableDepartmentIdPublishRouteImport } from './routes/timetable/$departmentId/publish'
 import { Route as DashboardDepartmentsDepartmentIdRouteImport } from './routes/dashboard/departments/$departmentId'
+import { Route as TimetableDepartmentIdConflictConflictIdIndexRouteImport } from './routes/timetable/$departmentId/conflict/$conflictId/index'
 
+const TimetableRouteRoute = TimetableRouteRouteImport.update({
+  id: '/timetable',
+  path: '/timetable',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -25,16 +36,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TimetableIndexRoute = TimetableIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TimetableRouteRoute,
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const TimetableDepartmentIdRouteRoute =
+  TimetableDepartmentIdRouteRouteImport.update({
+    id: '/$departmentId',
+    path: '/$departmentId',
+    getParentRoute: () => TimetableRouteRoute,
+  } as any)
+const TimetableDepartmentIdIndexRoute =
+  TimetableDepartmentIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => TimetableDepartmentIdRouteRoute,
+  } as any)
 const DashboardDepartmentsIndexRoute =
   DashboardDepartmentsIndexRouteImport.update({
     id: '/departments/',
     path: '/departments/',
     getParentRoute: () => DashboardRouteRoute,
+  } as any)
+const TimetableDepartmentIdPublishRoute =
+  TimetableDepartmentIdPublishRouteImport.update({
+    id: '/publish',
+    path: '/publish',
+    getParentRoute: () => TimetableDepartmentIdRouteRoute,
   } as any)
 const DashboardDepartmentsDepartmentIdRoute =
   DashboardDepartmentsDepartmentIdRouteImport.update({
@@ -42,58 +76,104 @@ const DashboardDepartmentsDepartmentIdRoute =
     path: '/departments/$departmentId',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
+const TimetableDepartmentIdConflictConflictIdIndexRoute =
+  TimetableDepartmentIdConflictConflictIdIndexRouteImport.update({
+    id: '/conflict/$conflictId/',
+    path: '/conflict/$conflictId/',
+    getParentRoute: () => TimetableDepartmentIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/timetable': typeof TimetableRouteRouteWithChildren
+  '/timetable/$departmentId': typeof TimetableDepartmentIdRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/timetable/': typeof TimetableIndexRoute
   '/dashboard/departments/$departmentId': typeof DashboardDepartmentsDepartmentIdRoute
+  '/timetable/$departmentId/publish': typeof TimetableDepartmentIdPublishRoute
   '/dashboard/departments/': typeof DashboardDepartmentsIndexRoute
+  '/timetable/$departmentId/': typeof TimetableDepartmentIdIndexRoute
+  '/timetable/$departmentId/conflict/$conflictId/': typeof TimetableDepartmentIdConflictConflictIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/timetable': typeof TimetableIndexRoute
   '/dashboard/departments/$departmentId': typeof DashboardDepartmentsDepartmentIdRoute
+  '/timetable/$departmentId/publish': typeof TimetableDepartmentIdPublishRoute
   '/dashboard/departments': typeof DashboardDepartmentsIndexRoute
+  '/timetable/$departmentId': typeof TimetableDepartmentIdIndexRoute
+  '/timetable/$departmentId/conflict/$conflictId': typeof TimetableDepartmentIdConflictConflictIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/timetable': typeof TimetableRouteRouteWithChildren
+  '/timetable/$departmentId': typeof TimetableDepartmentIdRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/timetable/': typeof TimetableIndexRoute
   '/dashboard/departments/$departmentId': typeof DashboardDepartmentsDepartmentIdRoute
+  '/timetable/$departmentId/publish': typeof TimetableDepartmentIdPublishRoute
   '/dashboard/departments/': typeof DashboardDepartmentsIndexRoute
+  '/timetable/$departmentId/': typeof TimetableDepartmentIdIndexRoute
+  '/timetable/$departmentId/conflict/$conflictId/': typeof TimetableDepartmentIdConflictConflictIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/timetable'
+    | '/timetable/$departmentId'
     | '/dashboard/'
+    | '/timetable/'
     | '/dashboard/departments/$departmentId'
+    | '/timetable/$departmentId/publish'
     | '/dashboard/departments/'
+    | '/timetable/$departmentId/'
+    | '/timetable/$departmentId/conflict/$conflictId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
+    | '/timetable'
     | '/dashboard/departments/$departmentId'
+    | '/timetable/$departmentId/publish'
     | '/dashboard/departments'
+    | '/timetable/$departmentId'
+    | '/timetable/$departmentId/conflict/$conflictId'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/timetable'
+    | '/timetable/$departmentId'
     | '/dashboard/'
+    | '/timetable/'
     | '/dashboard/departments/$departmentId'
+    | '/timetable/$departmentId/publish'
     | '/dashboard/departments/'
+    | '/timetable/$departmentId/'
+    | '/timetable/$departmentId/conflict/$conflictId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
+  TimetableRouteRoute: typeof TimetableRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/timetable': {
+      id: '/timetable'
+      path: '/timetable'
+      fullPath: '/timetable'
+      preLoaderRoute: typeof TimetableRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -108,12 +188,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/timetable/': {
+      id: '/timetable/'
+      path: '/'
+      fullPath: '/timetable/'
+      preLoaderRoute: typeof TimetableIndexRouteImport
+      parentRoute: typeof TimetableRouteRoute
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/timetable/$departmentId': {
+      id: '/timetable/$departmentId'
+      path: '/$departmentId'
+      fullPath: '/timetable/$departmentId'
+      preLoaderRoute: typeof TimetableDepartmentIdRouteRouteImport
+      parentRoute: typeof TimetableRouteRoute
+    }
+    '/timetable/$departmentId/': {
+      id: '/timetable/$departmentId/'
+      path: '/'
+      fullPath: '/timetable/$departmentId/'
+      preLoaderRoute: typeof TimetableDepartmentIdIndexRouteImport
+      parentRoute: typeof TimetableDepartmentIdRouteRoute
     }
     '/dashboard/departments/': {
       id: '/dashboard/departments/'
@@ -122,12 +223,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDepartmentsIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/timetable/$departmentId/publish': {
+      id: '/timetable/$departmentId/publish'
+      path: '/publish'
+      fullPath: '/timetable/$departmentId/publish'
+      preLoaderRoute: typeof TimetableDepartmentIdPublishRouteImport
+      parentRoute: typeof TimetableDepartmentIdRouteRoute
+    }
     '/dashboard/departments/$departmentId': {
       id: '/dashboard/departments/$departmentId'
       path: '/departments/$departmentId'
       fullPath: '/dashboard/departments/$departmentId'
       preLoaderRoute: typeof DashboardDepartmentsDepartmentIdRouteImport
       parentRoute: typeof DashboardRouteRoute
+    }
+    '/timetable/$departmentId/conflict/$conflictId/': {
+      id: '/timetable/$departmentId/conflict/$conflictId/'
+      path: '/conflict/$conflictId'
+      fullPath: '/timetable/$departmentId/conflict/$conflictId/'
+      preLoaderRoute: typeof TimetableDepartmentIdConflictConflictIdIndexRouteImport
+      parentRoute: typeof TimetableDepartmentIdRouteRoute
     }
   }
 }
@@ -148,9 +263,43 @@ const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
   DashboardRouteRouteChildren,
 )
 
+interface TimetableDepartmentIdRouteRouteChildren {
+  TimetableDepartmentIdPublishRoute: typeof TimetableDepartmentIdPublishRoute
+  TimetableDepartmentIdIndexRoute: typeof TimetableDepartmentIdIndexRoute
+  TimetableDepartmentIdConflictConflictIdIndexRoute: typeof TimetableDepartmentIdConflictConflictIdIndexRoute
+}
+
+const TimetableDepartmentIdRouteRouteChildren: TimetableDepartmentIdRouteRouteChildren =
+  {
+    TimetableDepartmentIdPublishRoute: TimetableDepartmentIdPublishRoute,
+    TimetableDepartmentIdIndexRoute: TimetableDepartmentIdIndexRoute,
+    TimetableDepartmentIdConflictConflictIdIndexRoute:
+      TimetableDepartmentIdConflictConflictIdIndexRoute,
+  }
+
+const TimetableDepartmentIdRouteRouteWithChildren =
+  TimetableDepartmentIdRouteRoute._addFileChildren(
+    TimetableDepartmentIdRouteRouteChildren,
+  )
+
+interface TimetableRouteRouteChildren {
+  TimetableDepartmentIdRouteRoute: typeof TimetableDepartmentIdRouteRouteWithChildren
+  TimetableIndexRoute: typeof TimetableIndexRoute
+}
+
+const TimetableRouteRouteChildren: TimetableRouteRouteChildren = {
+  TimetableDepartmentIdRouteRoute: TimetableDepartmentIdRouteRouteWithChildren,
+  TimetableIndexRoute: TimetableIndexRoute,
+}
+
+const TimetableRouteRouteWithChildren = TimetableRouteRoute._addFileChildren(
+  TimetableRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRouteRoute: DashboardRouteRouteWithChildren,
+  TimetableRouteRoute: TimetableRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
