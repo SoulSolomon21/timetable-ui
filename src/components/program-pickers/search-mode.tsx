@@ -2,10 +2,8 @@ import type { FlatEntry } from './utils'
 import { Check, MapPin } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { cn } from '@/lib/utils'
-import { Badge } from '../ui/badge'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command'
-import { Separator } from '../ui/separator'
-import { FACULTY_TYPE_COLORS, toTitleCase } from './utils'
+import { toTitleCase } from './utils'
 
 interface Props {
   flatOptions: FlatEntry[]
@@ -67,7 +65,7 @@ function SearchMode({ flatOptions, onSelect, selected }: Props) {
                   onSelect={() => onSelect(item)}
                   className={cn(
                     'group rounded-md flex justify-between items-center w-full text-[0.8125rem] leading-normal text-primary gap-4 cursor-pointer p-3 m-1',
-                    "aria-checked:bg-accent-foreground/50",
+                    'aria-checked:bg-accent-foreground/50',
                     selected?.id === item.id && 'bg-accent-foreground/10',
                   )}
                 >

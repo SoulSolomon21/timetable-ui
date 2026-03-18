@@ -57,7 +57,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               {
                 name: 'Tanstack Query',
                 render: <ReactQueryDevtoolsPanel />,
-              }
+              },
             ]}
           />
           <Scripts />

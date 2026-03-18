@@ -69,16 +69,16 @@ function SteppedMode({ data, flatOptions, onSelect }: Props) {
   )
 
   const facultyOptions = useMemo<Option[]>(() => {
-    if (!campus) 
-return []
+    if (!campus)
+      return []
     const found = data.find(c => c.campusName === campus.id)
-    if (!found) 
-return []
+    if (!found)
+      return []
     const seen = new Set<string>()
     return (found.faculties ?? [])
       .filter((f): f is FacultyGroup & { facultyName: string } => {
-        if (!f.facultyName || seen.has(f.facultyName)) 
-return false
+        if (!f.facultyName || seen.has(f.facultyName))
+          return false
         seen.add(f.facultyName)
         return true
       })
@@ -86,11 +86,11 @@ return false
   }, [campus, data])
 
   const departmentOptions = useMemo<Option[]>(() => {
-    if (!campus || !faculty) 
-return []
+    if (!campus || !faculty)
+      return []
     const found = data.find(c => c.campusName === campus.id)
-    if (!found) 
-return []
+    if (!found)
+      return []
     return (found.faculties ?? [])
       .filter(f => f.facultyName === faculty.id)
       .flatMap(f => f.departments ?? [])
@@ -113,13 +113,13 @@ return []
 
   function handleDeptChange(option: Option | null) {
     setDept(option)
-    if (!option) 
-return
+    if (!option)
+      return
     const match = flatOptions.find(
       o => o.campus === campus?.id && o.faculty === faculty?.id && String(o.id) === option.id,
     )
-    if (match) 
-onSelect(match)
+    if (match)
+      onSelect(match)
   }
 
   return (

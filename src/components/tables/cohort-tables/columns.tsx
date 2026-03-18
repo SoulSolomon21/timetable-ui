@@ -1,9 +1,9 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, EllipsisVerticalIcon } from 'lucide-react'
+import { EllipsisVerticalIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 export interface CohortColumnType {
   programName: string
