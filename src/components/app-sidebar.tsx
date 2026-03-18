@@ -1,4 +1,4 @@
-import { CommandIcon } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 
 import * as React from 'react'
 import { NavDocuments } from '@/components/nav-documents'
@@ -26,18 +26,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="#">
-                <CommandIcon className="size-5!" />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
+              <Link to="/dashboard">
+                <img
+                  src="/UCU-logo.png"
+                  alt="UCU Logo"
+                  className="size-8 shrink-0"
+                />
+                <span className="text-base font-semibold">UCU Timetabling</span>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={routeMapping.navMain} />
-        <NavDocuments items={routeMapping.documents} />
-        <NavSecondary items={routeMapping.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={routeMapping.user} />

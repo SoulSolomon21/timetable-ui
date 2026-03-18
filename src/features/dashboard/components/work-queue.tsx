@@ -1,4 +1,4 @@
-'use client'
+import { formatDistanceToNow } from 'date-fns'
 
 import {
   AlertTriangleIcon,
@@ -102,16 +102,6 @@ const departments: DepartmentDraft[] = [
 ]
 
 // --- Helpers ---
-
-function formatRelativeTime(date: Date): string {
-  const minutes = Math.floor((Date.now() - date.getTime()) / 1000 / 60)
-  if (minutes < 60)
-    return `${minutes}m ago`
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24)
-    return `${hours}h ago`
-  return `${Math.floor(hours / 24)}d ago`
-}
 
 const statusConfig: Record<
   DepartmentStatus,
@@ -225,9 +215,9 @@ function DepartmentRow({
               <span>·</span>
               <span className="flex items-center gap-1">
                 <ClockIcon className="size-3" />
-                Draft
+                Draft created
                 {' '}
-                {formatRelativeTime(dept.generatedAt)}
+                {formatDistanceToNow(dept.generatedAt, { addSuffix: true })}
               </span>
             </>
           )}
@@ -237,7 +227,7 @@ function DepartmentRow({
               <span>
                 Published
                 {' '}
-                {formatRelativeTime(dept.publishedAt)}
+                {formatDistanceToNow(dept.publishedAt, { addSuffix: true })}
               </span>
             </>
           )}
@@ -270,8 +260,8 @@ function WorkQueueSection({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-sm font-medium">{config.label}</CardTitle>
-            <CardDescription className="text-xs">{config.description}</CardDescription>
+            <CardTitle>{config.label}</CardTitle>
+            <CardDescription>{config.description}</CardDescription>
           </div>
           <Badge variant="secondary" className="text-xs">
             {departments.length}
