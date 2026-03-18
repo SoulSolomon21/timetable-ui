@@ -6,8 +6,11 @@ import {
   ChevronRightIcon,
   ClockIcon,
   Loader2Icon,
+  PlayCircleIcon,
+  SparklesIcon,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -18,17 +21,19 @@ import {
 
 // --- Types ---
 
-type DepartmentStatus = 'conflict' | 'ready' | 'waiting' | 'published'
+type DepartmentStatus = 'conflict' | 'ready' | 'pending' | 'waiting' | 'published'
 
 interface DepartmentDraft {
   id: string
   name: string
   status: DepartmentStatus
   cohortCount: number
+  unitCount?: number
   conflictCount?: number
   studentCount?: number
   generatedAt?: Date
   publishedAt?: Date
+  assignmentsApprovedAt?: Date
 }
 
 // --- Mock data — replace with React Query / API call ---
@@ -80,6 +85,22 @@ const departments: DepartmentDraft[] = [
     generatedAt: new Date(Date.now() - 1000 * 60 * 90),
   },
   {
+    id: 'nurs',
+    name: 'Nursing',
+    status: 'pending',
+    cohortCount: 4,
+    unitCount: 22,
+    assignmentsApprovedAt: new Date(Date.now() - 1000 * 60 * 45),
+  },
+  {
+    id: 'the',
+    name: 'Theology',
+    status: 'pending',
+    cohortCount: 2,
+    unitCount: 10,
+    assignmentsApprovedAt: new Date(Date.now() - 1000 * 60 * 200),
+  },
+  {
     id: 'law',
     name: 'Law',
     status: 'waiting',
@@ -121,8 +142,13 @@ const statusConfig: Record<
     description: 'Draft generated, no conflicts found',
     icon: CheckCheckIcon,
   },
+  pending: {
+    label: 'Ready to generate',
+    description: 'Teaching assignments approved — no timetable draft yet',
+    icon: SparklesIcon,
+  },
   waiting: {
-    label: 'Awaiting assignments',
+    label: 'Awaiting teaching assignments',
     description: 'Assignments not yet approved in Alpha-MIS',
     icon: Loader2Icon,
   },
@@ -133,7 +159,7 @@ const statusConfig: Record<
   },
 }
 
-const statusOrder: DepartmentStatus[] = ['conflict', 'ready', 'waiting', 'published']
+const statusOrder: DepartmentStatus[] = ['conflict', 'ready', 'pending', 'waiting', 'published']
 
 // --- Sub-components ---
 
@@ -143,6 +169,7 @@ function StatusIcon({ status }: { status: DepartmentStatus }) {
   const styles: Record<DepartmentStatus, string> = {
     conflict: 'border-destructive/30 bg-destructive/10 text-destructive',
     ready: 'border-green-200 bg-green-50 text-green-600 dark:border-green-800 dark:bg-green-950 dark:text-green-400',
+    pending: 'border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-400',
     waiting: 'border-border bg-muted/50 text-muted-foreground',
     published: 'border-border bg-muted/50 text-muted-foreground',
   }
@@ -156,29 +183,34 @@ function StatusIcon({ status }: { status: DepartmentStatus }) {
 
 function DepartmentRow({
   dept,
-  onClick,
+  onOpen,
+  onGenerate,
 }: {
   dept: DepartmentDraft
-  onClick: () => void
+  onOpen: () => void
+  onGenerate: () => void
 }) {
-  const isActionable = dept.status === 'conflict' || dept.status === 'ready'
+  const isNavigable = dept.status === 'conflict' || dept.status === 'ready'
+  const isPending = dept.status === 'pending'
+  const isInactive = dept.status === 'waiting' || dept.status === 'published'
 
   return (
     <div
       className={`flex items-center gap-4 px-4 py-3 transition-colors first:rounded-t-none last:rounded-b-lg ${
-        isActionable
+        isNavigable
           ? 'cursor-pointer hover:bg-muted/50'
           : 'cursor-default'
       }`}
-      onClick={isActionable ? onClick : undefined}
+      onClick={isNavigable ? onOpen : undefined}
     >
       <StatusIcon status={dept.status} />
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className={`truncate text-sm font-medium ${!isActionable ? 'text-muted-foreground' : ''}`}>
+          <span className={`truncate text-sm font-medium ${isInactive ? 'text-muted-foreground' : ''}`}>
             {dept.name}
           </span>
+
           {dept.status === 'conflict' && !!dept.conflictCount && (
             <Badge variant="destructive" className="gap-1 text-xs">
               <AlertTriangleIcon className="size-3" />
@@ -187,19 +219,40 @@ function DepartmentRow({
               {dept.conflictCount === 1 ? 'conflict' : 'conflicts'}
             </Badge>
           )}
+
           {dept.status === 'ready' && (
             <Badge variant="outline" className="gap-1 text-xs text-green-700 dark:text-green-400">
               <CheckCheckIcon className="size-3" />
               No conflicts
             </Badge>
           )}
+
+          {dept.status === 'pending' && (
+            <Badge variant="outline" className="gap-1 text-xs text-blue-700 dark:text-blue-400">
+              <SparklesIcon className="size-3" />
+              Assignments ready
+            </Badge>
+          )}
         </div>
+
         <div className="mt-0.5 flex items-center gap-3 text-xs text-muted-foreground">
           <span>
             {dept.cohortCount}
             {' '}
             {dept.cohortCount === 1 ? 'cohort' : 'cohorts'}
           </span>
+
+          {dept.unitCount != null && (
+            <>
+              <span>·</span>
+              <span>
+                {dept.unitCount}
+                {' '}
+                units
+              </span>
+            </>
+          )}
+
           {dept.studentCount != null && (
             <>
               <span>·</span>
@@ -210,32 +263,61 @@ function DepartmentRow({
               </span>
             </>
           )}
+
           {dept.generatedAt && (
             <>
               <span>·</span>
               <span className="flex items-center gap-1">
                 <ClockIcon className="size-3" />
-                Draft created
+                Draft generated
                 {' '}
-                {formatDistanceToNow(dept.generatedAt, { addSuffix: true })}
+                {formatDistanceToNow(dept.generatedAt, { addSuffix: true, includeSeconds: true })}
               </span>
             </>
           )}
+
+          {dept.assignmentsApprovedAt && (
+            <>
+              <span>·</span>
+              <span className="flex items-center gap-1">
+                <ClockIcon className="size-3" />
+                Approved
+                {' '}
+                {formatDistanceToNow(dept.assignmentsApprovedAt, { addSuffix: true, includeSeconds: true })}
+              </span>
+            </>
+          )}
+
           {dept.publishedAt && (
             <>
               <span>·</span>
               <span>
                 Published
                 {' '}
-                {formatDistanceToNow(dept.publishedAt, { addSuffix: true })}
+                {formatDistanceToNow(dept.publishedAt, { addSuffix: true, includeSeconds: true })}
               </span>
             </>
           )}
         </div>
       </div>
 
-      {isActionable && (
+      {isNavigable && (
         <ChevronRightIcon className="size-4 shrink-0 text-muted-foreground" />
+      )}
+
+      {isPending && (
+        <Button
+          size="sm"
+          variant="outline"
+          className="gap-1.5 text-xs"
+          onClick={(e) => {
+            e.stopPropagation()
+            onGenerate()
+          }}
+        >
+          <PlayCircleIcon className="size-3.5" />
+          Generate
+        </Button>
       )}
     </div>
   )
@@ -244,11 +326,13 @@ function DepartmentRow({
 function WorkQueueSection({
   status,
   departments,
-  onDepartmentClick,
+  onDepartmentOpen,
+  onDepartmentGenerate,
 }: {
   status: DepartmentStatus
   departments: DepartmentDraft[]
-  onDepartmentClick: (dept: DepartmentDraft) => void
+  onDepartmentOpen: (dept: DepartmentDraft) => void
+  onDepartmentGenerate: (dept: DepartmentDraft) => void
 }) {
   if (departments.length === 0)
     return null
@@ -276,7 +360,8 @@ function WorkQueueSection({
             <DepartmentRow
               key={dept.id}
               dept={dept}
-              onClick={() => onDepartmentClick(dept)}
+              onOpen={() => onDepartmentOpen(dept)}
+              onGenerate={() => onDepartmentGenerate(dept)}
             />
           ))}
         </div>
@@ -293,15 +378,21 @@ function WorkQueue() {
       acc[status] = departments.filter(d => d.status === status)
       return acc
     },
-    { conflict: [], ready: [], waiting: [], published: [] },
+    { conflict: [], ready: [], pending: [], waiting: [], published: [] },
   )
 
-  function handleDepartmentClick(dept: DepartmentDraft) {
+  function handleDepartmentOpen(dept: DepartmentDraft) {
     // TODO: router.push(`/timetable/${dept.id}/draft`)
     console.log('Opening draft for', dept.name)
   }
 
-  const hasWork = grouped.conflict.length > 0 || grouped.ready.length > 0
+  function handleDepartmentGenerate(dept: DepartmentDraft) {
+    // TODO: POST /api/timetable/generate { departmentId: dept.id }
+    // then optimistically move dept to 'conflict' or 'ready' once draft returns
+    console.log('Triggering generation for', dept.name)
+  }
+
+  const hasWork = statusOrder.some(s => grouped[s].length > 0)
 
   return (
     <div className="flex flex-col gap-4 px-4 lg:px-6">
@@ -310,7 +401,8 @@ function WorkQueue() {
           key={status}
           status={status}
           departments={grouped[status]}
-          onDepartmentClick={handleDepartmentClick}
+          onDepartmentOpen={handleDepartmentOpen}
+          onDepartmentGenerate={handleDepartmentGenerate}
         />
       ))}
 

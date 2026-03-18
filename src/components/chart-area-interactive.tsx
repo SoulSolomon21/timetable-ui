@@ -1,4 +1,3 @@
-'use client'
 
 import type { ChartConfig } from '@/components/ui/chart'
 import * as React from 'react'

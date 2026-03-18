@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { CirclePlusIcon, MailIcon } from 'lucide-react'
+import { CalendarRangeIcon, CirclePlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   SidebarGroup,
@@ -35,7 +35,7 @@ export function NavMain({
               className="size-8 group-data-[collapsible=icon]:opacity-0"
               variant="outline"
             >
-              <MailIcon />
+              <CalendarRangeIcon />
               <span className="sr-only">Inbox</span>
             </Button>
           </SidebarMenuItem>

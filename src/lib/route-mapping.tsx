@@ -1,4 +1,4 @@
-import { BookIcon, ChartBarIcon, FolderIcon, LayoutDashboardIcon, UsersIcon } from 'lucide-react'
+import { BookIcon, LayoutDashboardIcon } from 'lucide-react'
 
 export const routeMapping = {
   user: {
@@ -19,27 +19,6 @@ export const routeMapping = {
       url: '/dashboard/departments',
       icon: (
         <BookIcon />
-      ),
-    },
-    {
-      title: 'Analytics',
-      url: '#',
-      icon: (
-        <ChartBarIcon />
-      ),
-    },
-    {
-      title: 'Projects',
-      url: '#',
-      icon: (
-        <FolderIcon />
-      ),
-    },
-    {
-      title: 'Team',
-      url: '#',
-      icon: (
-        <UsersIcon />
       ),
     },
   ],

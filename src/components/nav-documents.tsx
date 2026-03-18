@@ -1,4 +1,3 @@
-'use client'
 
 import { FolderIcon, MoreHorizontalIcon, ShareIcon, Trash2Icon } from 'lucide-react'
 import {
