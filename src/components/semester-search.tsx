@@ -10,9 +10,7 @@ import {
 } from '@/components/ui/combobox'
 import {
   Item,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
+  ItemContent, ItemTitle
 } from '@/components/ui/item'
 
 // --- Types ---
