@@ -19,7 +19,11 @@ import { Route as TimetableDepartmentIdIndexRouteImport } from './routes/timetab
 import { Route as DashboardDepartmentsIndexRouteImport } from './routes/dashboard/departments/index'
 import { Route as TimetableDepartmentIdPublishRouteImport } from './routes/timetable/$departmentId/publish'
 import { Route as DashboardDepartmentsDepartmentIdRouteImport } from './routes/dashboard/departments/$departmentId'
+import { Route as TimetableDepartmentIdCohortIdRouteRouteImport } from './routes/timetable/$departmentId/$cohortId/route'
+import { Route as TimetableDepartmentIdCohortIdIndexRouteImport } from './routes/timetable/$departmentId/$cohortId/index'
+import { Route as TimetableDepartmentIdCohortIdPublishRouteImport } from './routes/timetable/$departmentId/$cohortId/publish'
 import { Route as TimetableDepartmentIdConflictConflictIdIndexRouteImport } from './routes/timetable/$departmentId/conflict/$conflictId/index'
+import { Route as TimetableDepartmentIdCohortIdConflictConflictIdRouteImport } from './routes/timetable/$departmentId/$cohortId/conflict/$conflictId'
 
 const TimetableRouteRoute = TimetableRouteRouteImport.update({
   id: '/timetable',
@@ -76,11 +80,35 @@ const DashboardDepartmentsDepartmentIdRoute =
     path: '/departments/$departmentId',
     getParentRoute: () => DashboardRouteRoute,
   } as any)
+const TimetableDepartmentIdCohortIdRouteRoute =
+  TimetableDepartmentIdCohortIdRouteRouteImport.update({
+    id: '/$cohortId',
+    path: '/$cohortId',
+    getParentRoute: () => TimetableDepartmentIdRouteRoute,
+  } as any)
+const TimetableDepartmentIdCohortIdIndexRoute =
+  TimetableDepartmentIdCohortIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => TimetableDepartmentIdCohortIdRouteRoute,
+  } as any)
+const TimetableDepartmentIdCohortIdPublishRoute =
+  TimetableDepartmentIdCohortIdPublishRouteImport.update({
+    id: '/publish',
+    path: '/publish',
+    getParentRoute: () => TimetableDepartmentIdCohortIdRouteRoute,
+  } as any)
 const TimetableDepartmentIdConflictConflictIdIndexRoute =
   TimetableDepartmentIdConflictConflictIdIndexRouteImport.update({
     id: '/conflict/$conflictId/',
     path: '/conflict/$conflictId/',
     getParentRoute: () => TimetableDepartmentIdRouteRoute,
+  } as any)
+const TimetableDepartmentIdCohortIdConflictConflictIdRoute =
+  TimetableDepartmentIdCohortIdConflictConflictIdRouteImport.update({
+    id: '/conflict/$conflictId',
+    path: '/conflict/$conflictId',
+    getParentRoute: () => TimetableDepartmentIdCohortIdRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -90,10 +118,14 @@ export interface FileRoutesByFullPath {
   '/timetable/$departmentId': typeof TimetableDepartmentIdRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
   '/timetable/': typeof TimetableIndexRoute
+  '/timetable/$departmentId/$cohortId': typeof TimetableDepartmentIdCohortIdRouteRouteWithChildren
   '/dashboard/departments/$departmentId': typeof DashboardDepartmentsDepartmentIdRoute
   '/timetable/$departmentId/publish': typeof TimetableDepartmentIdPublishRoute
   '/dashboard/departments/': typeof DashboardDepartmentsIndexRoute
   '/timetable/$departmentId/': typeof TimetableDepartmentIdIndexRoute
+  '/timetable/$departmentId/$cohortId/publish': typeof TimetableDepartmentIdCohortIdPublishRoute
+  '/timetable/$departmentId/$cohortId/': typeof TimetableDepartmentIdCohortIdIndexRoute
+  '/timetable/$departmentId/$cohortId/conflict/$conflictId': typeof TimetableDepartmentIdCohortIdConflictConflictIdRoute
   '/timetable/$departmentId/conflict/$conflictId/': typeof TimetableDepartmentIdConflictConflictIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -104,6 +136,9 @@ export interface FileRoutesByTo {
   '/timetable/$departmentId/publish': typeof TimetableDepartmentIdPublishRoute
   '/dashboard/departments': typeof DashboardDepartmentsIndexRoute
   '/timetable/$departmentId': typeof TimetableDepartmentIdIndexRoute
+  '/timetable/$departmentId/$cohortId/publish': typeof TimetableDepartmentIdCohortIdPublishRoute
+  '/timetable/$departmentId/$cohortId': typeof TimetableDepartmentIdCohortIdIndexRoute
+  '/timetable/$departmentId/$cohortId/conflict/$conflictId': typeof TimetableDepartmentIdCohortIdConflictConflictIdRoute
   '/timetable/$departmentId/conflict/$conflictId': typeof TimetableDepartmentIdConflictConflictIdIndexRoute
 }
 export interface FileRoutesById {
@@ -114,10 +149,14 @@ export interface FileRoutesById {
   '/timetable/$departmentId': typeof TimetableDepartmentIdRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
   '/timetable/': typeof TimetableIndexRoute
+  '/timetable/$departmentId/$cohortId': typeof TimetableDepartmentIdCohortIdRouteRouteWithChildren
   '/dashboard/departments/$departmentId': typeof DashboardDepartmentsDepartmentIdRoute
   '/timetable/$departmentId/publish': typeof TimetableDepartmentIdPublishRoute
   '/dashboard/departments/': typeof DashboardDepartmentsIndexRoute
   '/timetable/$departmentId/': typeof TimetableDepartmentIdIndexRoute
+  '/timetable/$departmentId/$cohortId/publish': typeof TimetableDepartmentIdCohortIdPublishRoute
+  '/timetable/$departmentId/$cohortId/': typeof TimetableDepartmentIdCohortIdIndexRoute
+  '/timetable/$departmentId/$cohortId/conflict/$conflictId': typeof TimetableDepartmentIdCohortIdConflictConflictIdRoute
   '/timetable/$departmentId/conflict/$conflictId/': typeof TimetableDepartmentIdConflictConflictIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -129,10 +168,14 @@ export interface FileRouteTypes {
     | '/timetable/$departmentId'
     | '/dashboard/'
     | '/timetable/'
+    | '/timetable/$departmentId/$cohortId'
     | '/dashboard/departments/$departmentId'
     | '/timetable/$departmentId/publish'
     | '/dashboard/departments/'
     | '/timetable/$departmentId/'
+    | '/timetable/$departmentId/$cohortId/publish'
+    | '/timetable/$departmentId/$cohortId/'
+    | '/timetable/$departmentId/$cohortId/conflict/$conflictId'
     | '/timetable/$departmentId/conflict/$conflictId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,6 +186,9 @@ export interface FileRouteTypes {
     | '/timetable/$departmentId/publish'
     | '/dashboard/departments'
     | '/timetable/$departmentId'
+    | '/timetable/$departmentId/$cohortId/publish'
+    | '/timetable/$departmentId/$cohortId'
+    | '/timetable/$departmentId/$cohortId/conflict/$conflictId'
     | '/timetable/$departmentId/conflict/$conflictId'
   id:
     | '__root__'
@@ -152,10 +198,14 @@ export interface FileRouteTypes {
     | '/timetable/$departmentId'
     | '/dashboard/'
     | '/timetable/'
+    | '/timetable/$departmentId/$cohortId'
     | '/dashboard/departments/$departmentId'
     | '/timetable/$departmentId/publish'
     | '/dashboard/departments/'
     | '/timetable/$departmentId/'
+    | '/timetable/$departmentId/$cohortId/publish'
+    | '/timetable/$departmentId/$cohortId/'
+    | '/timetable/$departmentId/$cohortId/conflict/$conflictId'
     | '/timetable/$departmentId/conflict/$conflictId/'
   fileRoutesById: FileRoutesById
 }
@@ -237,12 +287,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDepartmentsDepartmentIdRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/timetable/$departmentId/$cohortId': {
+      id: '/timetable/$departmentId/$cohortId'
+      path: '/$cohortId'
+      fullPath: '/timetable/$departmentId/$cohortId'
+      preLoaderRoute: typeof TimetableDepartmentIdCohortIdRouteRouteImport
+      parentRoute: typeof TimetableDepartmentIdRouteRoute
+    }
+    '/timetable/$departmentId/$cohortId/': {
+      id: '/timetable/$departmentId/$cohortId/'
+      path: '/'
+      fullPath: '/timetable/$departmentId/$cohortId/'
+      preLoaderRoute: typeof TimetableDepartmentIdCohortIdIndexRouteImport
+      parentRoute: typeof TimetableDepartmentIdCohortIdRouteRoute
+    }
+    '/timetable/$departmentId/$cohortId/publish': {
+      id: '/timetable/$departmentId/$cohortId/publish'
+      path: '/publish'
+      fullPath: '/timetable/$departmentId/$cohortId/publish'
+      preLoaderRoute: typeof TimetableDepartmentIdCohortIdPublishRouteImport
+      parentRoute: typeof TimetableDepartmentIdCohortIdRouteRoute
+    }
     '/timetable/$departmentId/conflict/$conflictId/': {
       id: '/timetable/$departmentId/conflict/$conflictId/'
       path: '/conflict/$conflictId'
       fullPath: '/timetable/$departmentId/conflict/$conflictId/'
       preLoaderRoute: typeof TimetableDepartmentIdConflictConflictIdIndexRouteImport
       parentRoute: typeof TimetableDepartmentIdRouteRoute
+    }
+    '/timetable/$departmentId/$cohortId/conflict/$conflictId': {
+      id: '/timetable/$departmentId/$cohortId/conflict/$conflictId'
+      path: '/conflict/$conflictId'
+      fullPath: '/timetable/$departmentId/$cohortId/conflict/$conflictId'
+      preLoaderRoute: typeof TimetableDepartmentIdCohortIdConflictConflictIdRouteImport
+      parentRoute: typeof TimetableDepartmentIdCohortIdRouteRoute
     }
   }
 }
@@ -263,7 +341,29 @@ const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
   DashboardRouteRouteChildren,
 )
 
+interface TimetableDepartmentIdCohortIdRouteRouteChildren {
+  TimetableDepartmentIdCohortIdPublishRoute: typeof TimetableDepartmentIdCohortIdPublishRoute
+  TimetableDepartmentIdCohortIdIndexRoute: typeof TimetableDepartmentIdCohortIdIndexRoute
+  TimetableDepartmentIdCohortIdConflictConflictIdRoute: typeof TimetableDepartmentIdCohortIdConflictConflictIdRoute
+}
+
+const TimetableDepartmentIdCohortIdRouteRouteChildren: TimetableDepartmentIdCohortIdRouteRouteChildren =
+  {
+    TimetableDepartmentIdCohortIdPublishRoute:
+      TimetableDepartmentIdCohortIdPublishRoute,
+    TimetableDepartmentIdCohortIdIndexRoute:
+      TimetableDepartmentIdCohortIdIndexRoute,
+    TimetableDepartmentIdCohortIdConflictConflictIdRoute:
+      TimetableDepartmentIdCohortIdConflictConflictIdRoute,
+  }
+
+const TimetableDepartmentIdCohortIdRouteRouteWithChildren =
+  TimetableDepartmentIdCohortIdRouteRoute._addFileChildren(
+    TimetableDepartmentIdCohortIdRouteRouteChildren,
+  )
+
 interface TimetableDepartmentIdRouteRouteChildren {
+  TimetableDepartmentIdCohortIdRouteRoute: typeof TimetableDepartmentIdCohortIdRouteRouteWithChildren
   TimetableDepartmentIdPublishRoute: typeof TimetableDepartmentIdPublishRoute
   TimetableDepartmentIdIndexRoute: typeof TimetableDepartmentIdIndexRoute
   TimetableDepartmentIdConflictConflictIdIndexRoute: typeof TimetableDepartmentIdConflictConflictIdIndexRoute
@@ -271,6 +371,8 @@ interface TimetableDepartmentIdRouteRouteChildren {
 
 const TimetableDepartmentIdRouteRouteChildren: TimetableDepartmentIdRouteRouteChildren =
   {
+    TimetableDepartmentIdCohortIdRouteRoute:
+      TimetableDepartmentIdCohortIdRouteRouteWithChildren,
     TimetableDepartmentIdPublishRoute: TimetableDepartmentIdPublishRoute,
     TimetableDepartmentIdIndexRoute: TimetableDepartmentIdIndexRoute,
     TimetableDepartmentIdConflictConflictIdIndexRoute:

@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge'
 import type { Cohort } from '@/features/timetabling/types'
+import { Badge } from '@/components/ui/badge'
 
 interface CohortChipProps {
   cohort: Cohort
@@ -24,7 +24,11 @@ export function CohortChip({ cohort, onSelect }: CohortChipProps) {
       {cohort.label}
       {cohort.status === 'conflict' && cohort.conflictCount != null && (
         <span className="text-destructive">
-          · {cohort.conflictCount} {cohort.conflictCount === 1 ? 'conflict' : 'conflicts'}
+          ·
+          {' '}
+          {cohort.conflictCount}
+          {' '}
+          {cohort.conflictCount === 1 ? 'conflict' : 'conflicts'}
         </span>
       )}
       {cohort.status === 'published' && (

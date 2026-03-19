@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import type { DepartmentDraft, DepartmentStatus } from '@/features/timetabling/types'
 import {
   AlertTriangleIcon,
   CheckCheckIcon,
@@ -8,9 +8,9 @@ import {
   PlayCircleIcon,
   SparklesIcon,
 } from 'lucide-react'
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import type { DepartmentDraft, DepartmentStatus } from '@/features/timetabling/types'
 import { formatDistanceToNow } from '@/features/timetabling/utils'
 import { DepartmentExpanded } from './DepartmentExpanded'
 
@@ -68,7 +68,9 @@ export function DepartmentRow({ dept, onCohortSelect, onGenerateRequest }: Depar
             {dept.status === 'conflict' && !!dept.conflictCount && (
               <Badge variant="destructive" className="gap-1 text-xs">
                 <AlertTriangleIcon className="size-3" />
-                {dept.conflictCount} {dept.conflictCount === 1 ? 'conflict' : 'conflicts'}
+                {dept.conflictCount}
+                {' '}
+                {dept.conflictCount === 1 ? 'conflict' : 'conflicts'}
               </Badge>
             )}
 
@@ -88,28 +90,45 @@ export function DepartmentRow({ dept, onCohortSelect, onGenerateRequest }: Depar
           </div>
 
           <div className="mt-0.5 flex items-center gap-3 text-xs text-muted-foreground">
-            {dept.unitCount != null && <span>{dept.unitCount} units</span>}
+            {dept.unitCount != null && (
+              <span>
+                {dept.unitCount}
+                {' '}
+                units
+              </span>
+            )}
 
             {dept.studentCount != null && (
-              <span>{dept.studentCount.toLocaleString()} students</span>
+              <span>
+                {dept.studentCount.toLocaleString()}
+                {' '}
+                students
+              </span>
             )}
 
             {dept.generatedAt && (
               <span className="flex items-center gap-1">
                 <ClockIcon className="size-3" />
-                Draft {formatDistanceToNow(dept.generatedAt, { addSuffix: true })}
+                Draft
+                {' '}
+                {formatDistanceToNow(dept.generatedAt, { addSuffix: true })}
               </span>
             )}
 
             {dept.assignmentsApprovedAt && (
               <span className="flex items-center gap-1">
                 <ClockIcon className="size-3" />
-                Approved {formatDistanceToNow(dept.assignmentsApprovedAt, { addSuffix: true })}
+                Approved
+                {' '}
+                {formatDistanceToNow(dept.assignmentsApprovedAt, { addSuffix: true })}
               </span>
             )}
 
             {dept.publishedAt && (
-              <span>Published {formatDistanceToNow(dept.publishedAt, { addSuffix: true })}</span>
+              <span>
+                Published
+                {formatDistanceToNow(dept.publishedAt, { addSuffix: true })}
+              </span>
             )}
           </div>
         </div>

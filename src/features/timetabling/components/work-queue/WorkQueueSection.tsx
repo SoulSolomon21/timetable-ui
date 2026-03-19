@@ -1,3 +1,4 @@
+import type { DepartmentDraft, DepartmentStatus } from '@/features/timetabling/types'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -6,10 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { DepartmentDraft, DepartmentStatus } from '@/features/timetabling/types'
 import { DepartmentRow } from './DepartmentRow'
 
-const sectionConfig: Record<DepartmentStatus, { label: string; description: string }> = {
+const sectionConfig: Record<DepartmentStatus, { label: string, description: string }> = {
   conflict: {
     label: 'Needs attention',
     description: 'Resolve conflicts before publishing is available',
@@ -45,7 +45,8 @@ export function WorkQueueSection({
   onCohortSelect,
   onGenerateRequest,
 }: WorkQueueSectionProps) {
-  if (departments.length === 0) return null
+  if (departments.length === 0)
+    return null
 
   const config = sectionConfig[status]
 
@@ -58,7 +59,9 @@ export function WorkQueueSection({
             <CardDescription>{config.description}</CardDescription>
           </div>
           <Badge variant="secondary" className="text-xs">
-            {departments.length} {departments.length === 1 ? 'department' : 'departments'}
+            {departments.length}
+            {' '}
+            {departments.length === 1 ? 'department' : 'departments'}
           </Badge>
         </div>
       </CardHeader>

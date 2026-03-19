@@ -1,9 +1,9 @@
-export type DepartmentStatus =
-  | 'conflict' // draft exists, has unresolved conflicts
-  | 'ready' // draft exists, no conflicts, awaiting publish
-  | 'pending' // assignments approved in Alpha-MIS, no draft generated yet
-  | 'waiting' // assignments not yet approved in Alpha-MIS
-  | 'published' // timetable is live
+export type DepartmentStatus
+  = | 'conflict' // draft exists, has unresolved conflicts
+    | 'ready' // draft exists, no conflicts, awaiting publish
+    | 'pending' // assignments approved in Alpha-MIS, no draft generated yet
+    | 'waiting' // assignments not yet approved in Alpha-MIS
+    | 'published' // timetable is live
 
 export type CohortStatus = 'conflict' | 'ready' | 'published' | 'pending'
 

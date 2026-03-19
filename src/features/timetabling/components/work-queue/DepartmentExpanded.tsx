@@ -1,6 +1,6 @@
+import type { DepartmentDraft } from '@/features/timetabling/types'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
-import type { DepartmentDraft } from '@/features/timetabling/types'
 import { formatDistanceToNow } from '@/features/timetabling/utils'
 import { CohortChip } from './CohortChip'
 
@@ -33,11 +33,17 @@ export function DepartmentExpanded({ dept, onCohortSelect }: DepartmentExpandedP
         <div className="flex items-center gap-3">
           {dept.generatedAt && (
             <span>
-              Draft generated {formatDistanceToNow(dept.generatedAt, { addSuffix: true })}
+              Draft generated
+              {' '}
+              {formatDistanceToNow(dept.generatedAt, { addSuffix: true })}
             </span>
           )}
           {dept.studentCount != null && (
-            <span>{dept.studentCount.toLocaleString()} students</span>
+            <span>
+              {dept.studentCount.toLocaleString()}
+              {' '}
+              students
+            </span>
           )}
         </div>
         <Button
@@ -48,8 +54,7 @@ export function DepartmentExpanded({ dept, onCohortSelect }: DepartmentExpandedP
             navigate({
               to: '/timetable/$departmentId',
               params: { departmentId: dept.id },
-            })
-          }
+            })}
         >
           Full overview →
         </Button>

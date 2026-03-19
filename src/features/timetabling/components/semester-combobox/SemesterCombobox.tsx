@@ -1,3 +1,4 @@
+import type { Semester } from '@/features/timetabling/types'
 import {
   Combobox,
   ComboboxContent,
@@ -7,7 +8,6 @@ import {
   ComboboxList,
 } from '@/components/ui/combobox'
 import { Item, ItemContent, ItemTitle } from '@/components/ui/item'
-import type { Semester } from '@/features/timetabling/types'
 
 // TODO: replace with useQuery(semestersQuery) when API is ready
 const semesters: Semester[] = [
@@ -37,7 +37,9 @@ export function SemesterCombobox() {
               <Item size="xs" className="p-0">
                 <ItemContent>
                   <ItemTitle className="whitespace-nowrap">
-                    {semester.name} {semester.year}
+                    {semester.name}
+                    {' '}
+                    {semester.year}
                   </ItemTitle>
                 </ItemContent>
               </Item>

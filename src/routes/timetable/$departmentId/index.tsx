@@ -9,7 +9,10 @@ function DepartmentHubPage() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-      <p className="text-sm text-muted-foreground">Department ID: {departmentId}</p>
+      <p className="text-sm text-muted-foreground">
+        Department ID:
+        {departmentId}
+      </p>
       <p className="text-lg font-medium">Department hub coming soon</p>
       <Link
         to="/timetable"

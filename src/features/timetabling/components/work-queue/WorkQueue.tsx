@@ -1,7 +1,7 @@
+import type { DepartmentDraft, DepartmentStatus } from '@/features/timetabling/types'
 import { useNavigate } from '@tanstack/react-router'
 import { CheckCheckIcon } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
-import type { DepartmentDraft, DepartmentStatus } from '@/features/timetabling/types'
 import { WorkQueueSection } from './WorkQueueSection'
 
 // TODO: replace with useQuery(departmentDraftsQuery(semesterId))

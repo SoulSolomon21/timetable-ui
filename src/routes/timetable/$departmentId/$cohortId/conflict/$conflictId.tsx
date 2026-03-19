@@ -12,7 +12,13 @@ function ConflictResolutionPage() {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
       <p className="text-sm text-muted-foreground">
-        {departmentId} / {cohortId} / conflict {conflictId}
+        {departmentId}
+        {' '}
+        /
+        {cohortId}
+        {' '}
+        / conflict
+        {conflictId}
       </p>
       <p className="text-lg font-medium">Conflict resolution panel coming soon</p>
       {/*
