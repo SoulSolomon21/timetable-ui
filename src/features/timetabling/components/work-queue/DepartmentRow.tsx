@@ -109,7 +109,7 @@ export function DepartmentRow({ dept, onCohortSelect, onGenerateRequest }: Depar
             {dept.generatedAt && (
               <span className="flex items-center gap-1">
                 <ClockIcon className="size-3" />
-                Draft
+                Draft generated
                 {' '}
                 {formatDistanceToNow(dept.generatedAt, { addSuffix: true })}
               </span>

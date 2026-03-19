@@ -17,7 +17,7 @@ export function DepartmentExpanded({ dept, onCohortSelect }: DepartmentExpandedP
       <div className="flex flex-col gap-2">
         {dept.programs.map(program => (
           <div key={program.id} className="flex items-start gap-3">
-            <span className="w-[200px] shrink-0 truncate text-sm text-muted-foreground">
+            <span className="w-50 shrink-0 truncate text-sm text-muted-foreground">
               {program.name}
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -47,9 +47,9 @@ export function DepartmentExpanded({ dept, onCohortSelect }: DepartmentExpandedP
           )}
         </div>
         <Button
-          size="sm"
+          size="lg"
           variant="ghost"
-          className="h-auto p-0 text-xs"
+          className="h-auto p-1 text-xs"
           onClick={() =>
             navigate({
               to: '/timetable/$departmentId',

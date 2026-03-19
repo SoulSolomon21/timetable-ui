@@ -16,9 +16,9 @@ const mockDepartments: DepartmentDraft[] = [
         name: 'BSc Computer Science',
         code: 'BSCS',
         cohorts: [
-          { id: 'bscs-y1', label: 'Year 1', status: 'conflict', conflictCount: 2 },
-          { id: 'bscs-y2', label: 'Year 2', status: 'ready' },
-          { id: 'bscs-y3', label: 'Year 3', status: 'conflict', conflictCount: 1 },
+          { id: 'bscs-y1-s1', label: 'Year 1:1', status: 'conflict', conflictCount: 2 },
+          { id: 'bscs-y2-s2', label: 'Year 2:2', status: 'ready' },
+          { id: 'bscs-y3-s2', label: 'Year 3:2', status: 'conflict', conflictCount: 1 },
         ],
       },
       {
@@ -201,12 +201,13 @@ export function WorkQueue() {
     navigate({
       to: '/timetable/$departmentId/$cohortId',
       params: { departmentId: deptId, cohortId },
+      search: { view: 'cohort' },
     })
   }
 
   function handleGenerateRequest(deptId: string) {
     // TODO: POST /api/timetable/generate { departmentId: deptId }
-    console.log('Triggering generation for', deptId)
+    console.warn('Triggering generation for', deptId)
   }
 
   const hasWork = statusOrder.some(s => grouped[s].length > 0)

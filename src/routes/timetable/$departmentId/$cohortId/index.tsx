@@ -5,17 +5,10 @@ export const Route = createFileRoute('/timetable/$departmentId/$cohortId/')({
 })
 
 function TimetableGridPage() {
-  const { departmentId, cohortId } = Route.useParams()
-
   return (
-    <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-      <p className="text-sm text-muted-foreground">
-        {departmentId}
-        {' '}
-        /
-        {cohortId}
-      </p>
-      <p className="text-lg font-medium">Timetable grid</p>
+    <div className="flex h-full flex-col items-center justify-center gap-2 text-muted-foreground">
+      <p className="text-sm font-medium">Timetable grid</p>
+      <p className="text-xs">big-calendar week view renders here</p>
       {/* TODO: render adapted big-calendar week view */}
     </div>
   )
