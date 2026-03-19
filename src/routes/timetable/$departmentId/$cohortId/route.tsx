@@ -1,6 +1,5 @@
-import { createFileRoute, Link, Outlet, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
 import { AlertTriangleIcon, FileTextIcon } from 'lucide-react'
-import { z } from 'zod'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,7 +10,6 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 // TODO: replace with data from loader once dept/cohort data is available
 const conflictCount = 2
@@ -37,19 +35,12 @@ const statusDotColor: Record<string, string> = {
   pending: 'bg-blue-500',
 }
 
-const viewSchema = z.object({
-  view: z.enum(['cohort', 'lecturer', 'room']).default('cohort'),
-})
-
 export const Route = createFileRoute('/timetable/$departmentId/$cohortId')({
-  validateSearch: (search: Record<string, unknown>) => viewSchema.parse(search),
   component: CohortLayout,
 })
 
 function CohortLayout() {
   const { departmentId, cohortId } = Route.useParams()
-  const { view } = Route.useSearch()
-  const navigate = useNavigate({ from: Route.fullPath })
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
@@ -83,7 +74,9 @@ function CohortLayout() {
           {conflictCount > 0 && (
             <Button size="sm" variant="destructive" className="gap-1.5 text-xs">
               <AlertTriangleIcon className="size-3.5" />
-              {conflictCount} conflicts
+              {conflictCount}
+              {' '}
+              conflicts
             </Button>
           )}
 
@@ -92,57 +85,31 @@ function CohortLayout() {
             Export PDF
           </Button>
 
-          {conflictCount > 0 ? (
-            <Button
-              size="sm"
-              disabled
-              className="gap-1.5 border border-green-300 bg-green-50 text-xs text-green-800 opacity-50 hover:bg-green-100"
-            >
-              Publish cohort →
-            </Button>
-          ) : (
-            <Link
-              to="/timetable/$departmentId/$cohortId/publish"
-              params={{ departmentId, cohortId }}
-              search={{ view }}
-            >
-              <Button
-                size="sm"
-                className="gap-1.5 border border-green-300 bg-green-50 text-xs text-green-800 hover:bg-green-100"
-              >
-                Publish cohort →
-              </Button>
-            </Link>
-          )}
+          {conflictCount > 0
+            ? (
+                <Button
+                  size="sm"
+                  disabled
+                  className="gap-1.5 border border-green-300 bg-green-50 text-xs text-green-800 opacity-50 hover:bg-green-100"
+                >
+                  Publish cohort →
+                </Button>
+              )
+            : (
+                <Link
+                  to="/timetable/$departmentId/$cohortId/publish"
+                  params={{ departmentId, cohortId }}
+                >
+                  <Button
+                    size="sm"
+                    className="gap-1.5 border border-green-300 bg-green-50 text-xs text-green-800 hover:bg-green-100"
+                  >
+                    Publish cohort →
+                  </Button>
+                </Link>
+              )}
         </div>
       </header>
-
-      {/* Toolbar */}
-      <div className="flex h-10 shrink-0 items-center justify-between border-b px-4 lg:px-6">
-        <Tabs
-          value={view}
-          onValueChange={v =>
-            navigate({ search: prev => ({ ...prev, view: v as 'cohort' | 'lecturer' | 'room' }) })
-          }
-        >
-          <TabsList className="h-7">
-            <TabsTrigger value="cohort" className="text-xs">
-              By cohort
-            </TabsTrigger>
-            <TabsTrigger value="lecturer" className="text-xs">
-              By lecturer
-            </TabsTrigger>
-            <TabsTrigger value="room" className="text-xs">
-              By room
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        <Button size="sm" variant="outline" className="h-7 text-xs">
-          {/* TODO: wire up week-picker or template selector */}
-          Week template
-        </Button>
-      </div>
 
       {/* Body */}
       <div className="flex flex-1 overflow-hidden">
@@ -159,14 +126,11 @@ function CohortLayout() {
                       key={c.id}
                       to="/timetable/$departmentId/$cohortId"
                       params={{ departmentId, cohortId: c.id }}
-                      search={{ view }}
                       className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-muted ${
                         c.id === cohortId ? 'bg-muted font-medium' : 'text-muted-foreground'
                       }`}
                     >
-                      <span
-                        className={`size-1.5 rounded-full ${statusDotColor[c.status]}`}
-                      />
+                      <span className={`size-1.5 rounded-full ${statusDotColor[c.status]}`} />
                       {c.label}
                     </Link>
                   ))}
@@ -177,7 +141,9 @@ function CohortLayout() {
               {conflictCount > 0 && (
                 <div>
                   <p className="mb-1.5 px-1 text-xs font-medium text-muted-foreground">
-                    Conflicts ({conflictCount})
+                    Conflicts (
+                    {conflictCount}
+                    )
                   </p>
                   <div className="flex flex-col gap-1.5">
                     {mockConflicts.map(conflict => (
@@ -185,7 +151,6 @@ function CohortLayout() {
                         key={conflict.id}
                         to="/timetable/$departmentId/$cohortId/conflict/$conflictId"
                         params={{ departmentId, cohortId, conflictId: conflict.id }}
-                        search={{ view }}
                         className="rounded-md border border-destructive/30 bg-destructive/10 p-2 text-xs transition-colors hover:bg-destructive/15"
                       >
                         <p className="font-medium text-destructive">{conflict.type}</p>
@@ -208,7 +173,7 @@ function CohortLayout() {
                   ].map(item => (
                     <div key={item.label} className="flex items-center gap-2 text-xs">
                       <span
-                        className="size-3 rounded-sm shrink-0"
+                        className="size-3 shrink-0 rounded-sm"
                         style={{ backgroundColor: item.color }}
                       />
                       <span className="text-muted-foreground">{item.label}</span>
@@ -220,24 +185,9 @@ function CohortLayout() {
           </ScrollArea>
         </aside>
 
-        {/* Calendar area */}
-        <div className="flex flex-1 flex-col overflow-hidden">
-          {/* Day headers */}
-          <div className="sticky top-0 z-10 grid grid-cols-[44px_repeat(5,1fr)] border-b bg-background">
-            <div /> {/* time gutter spacer */}
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day => (
-              <div
-                key={day}
-                className="border-l px-2 py-2 text-center text-xs font-medium text-muted-foreground"
-              >
-                {day}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex-1 overflow-auto">
-            <Outlet />
-          </div>
+        {/* Calendar area — Outlet fills this, TimetableWeekView owns its own day headers */}
+        <div className="flex flex-1 overflow-hidden">
+          <Outlet />
         </div>
       </div>
     </div>
