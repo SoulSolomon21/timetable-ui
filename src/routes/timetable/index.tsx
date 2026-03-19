@@ -1,16 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { StatsCards } from '@/components/stats-cards'
-import WorkQueue from '@/features/dashboard/components/work-queue'
+import { SectionCards } from '@/features/timetabling/components/section-cards/SectionCards'
+import { WorkQueue } from '@/features/timetabling/components/work-queue/WorkQueue'
 
 export const Route = createFileRoute('/timetable/')({
-  component: RouteComponent,
+  component: WorkQueuePage,
 })
 
-function RouteComponent() {
+function WorkQueuePage() {
   return (
-    <>
-      <StatsCards />
+    <div className="flex flex-col gap-6 py-6">
+      <SectionCards />
       <WorkQueue />
-    </>
+    </div>
   )
 }

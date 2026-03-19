@@ -23,7 +23,7 @@ export const routeMapping = {
     },
     {
       title: 'Departments',
-      url: '/dashboard/departments',
+      url: '/timetable/departments',
       icon: (
         <BookIcon />
       ),

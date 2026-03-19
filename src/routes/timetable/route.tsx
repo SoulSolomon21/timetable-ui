@@ -1,37 +1,47 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { AppSidebar } from '@/components/app-sidebar'
-import { SiteHeader } from '@/components/site-header'
-
-import {
-  SidebarInset,
-  SidebarProvider,
-} from '@/components/ui/sidebar'
+import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
+import { CalendarDaysIcon } from 'lucide-react'
+import { SemesterCombobox } from '@/features/timetabling/components/semester-combobox/SemesterCombobox'
 
 export const Route = createFileRoute('/timetable')({
-  component: RouteComponent,
+  component: TimetableLayout,
 })
 
-function RouteComponent() {
+// TODO: replace local semester state with a context provider or search param
+function TimetableLayout() {
   return (
-    <SidebarProvider
-      style={
-        {
-          '--sidebar-width': 'calc(var(--spacing) * 72)',
-          '--header-height': 'calc(var(--spacing) * 12)',
-        } as React.CSSProperties
-      }
-    >
-      <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
-              <Outlet />
-            </div>
+    <div className="@container/main flex min-h-screen flex-col">
+      <header className="flex h-14 shrink-0 items-center border-b px-4 lg:px-6">
+        <div className="flex items-center gap-2 font-semibold">
+          <CalendarDaysIcon className="size-5" />
+          <span>UCU Timetable</span>
+        </div>
+
+        <nav className="ml-8 flex items-center gap-1 text-sm">
+          <Link
+            to="/timetable"
+            className="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&.active]:bg-muted [&.active]:text-foreground"
+          >
+            Scheduling
+          </Link>
+          <span className="rounded-md px-3 py-1.5 text-muted-foreground/50 cursor-not-allowed">
+            Rooms
+          </span>
+          <span className="rounded-md px-3 py-1.5 text-muted-foreground/50 cursor-not-allowed">
+            Lecturers
+          </span>
+        </nav>
+
+        <div className="ml-auto flex items-center gap-3">
+          <SemesterCombobox />
+          <div className="flex size-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+            TO
           </div>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </header>
+
+      <main className="flex-1">
+        <Outlet />
+      </main>
+    </div>
   )
 }
