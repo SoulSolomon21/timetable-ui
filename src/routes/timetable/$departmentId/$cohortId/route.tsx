@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import CalendarWeekView from '@/features/my-calendar/components/week-view/calendar-week-view'
 
 // TODO: replace with data from loader once dept/cohort data is available
 const conflictCount = 2
@@ -112,7 +113,7 @@ function CohortLayout() {
       </header>
 
       {/* Body */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1">
         {/* Sidebar */}
         <aside className="w-52 shrink-0 border-r">
           <ScrollArea className="h-full">
@@ -193,3 +194,11 @@ function CohortLayout() {
     </div>
   )
 }
+
+function Playground() {
+  return (
+    <CalendarWeekView />
+  )
+}
+
+export default Playground

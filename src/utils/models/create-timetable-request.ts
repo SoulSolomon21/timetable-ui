@@ -6,6 +6,7 @@
  */
 
 export interface CreateTimetableRequest {
+  cohortId?: string
   /** @minLength 1 */
   programId: string
   /** @minLength 1 */

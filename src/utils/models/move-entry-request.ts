@@ -4,9 +4,13 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
+import type { MoveEntryRequestNewDay } from './move-entry-request-new-day'
+import type { MoveEntryRequestNewDeliveryMode } from './move-entry-request-new-delivery-mode'
 
 export interface MoveEntryRequest {
-  /** @minLength 1 */
-  newTimeSlotId: string
+  newDay: MoveEntryRequestNewDay
+  newStartTime: string
+  newEndTime: string
+  newDeliveryMode: MoveEntryRequestNewDeliveryMode
   newRoomId?: string
 }

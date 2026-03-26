@@ -14,6 +14,7 @@ import type {
 } from '@tanstack/react-query'
 import type {
   ApprovedAssignment,
+  CohortView,
   ConflictSummaryView,
   CreateTimetableRequest,
   GetAllAssignmentsParams,
@@ -21,13 +22,12 @@ import type {
   LegacyCampusRoomGroup,
   LegacyCohortResponse,
   LegacyDepartmentResponse,
-  LegacyLessonSlotGroup,
   ListTimetablesParams,
   MoveEntryRequest,
   PlaceEntryRequest,
   PublishRequest,
   ResolveConflictRequest,
-  SlotView,
+  SyncParams,
   TimetableGridView,
   TimetableListItemView,
 } from './models'
@@ -558,6 +558,74 @@ export function useResolveConflict<TError = unknown, TContext = unknown>(options
   return useMutation(getResolveConflictMutationOptions(options), queryClient)
 }
 
+export interface syncResponse200 {
+  data: string
+  status: 200
+}
+
+export type syncResponseSuccess = (syncResponse200) & {
+  headers: Headers
+}
+
+export type syncResponse = (syncResponseSuccess)
+
+export function getSyncUrl(params: SyncParams) {
+  const normalizedParams = new URLSearchParams()
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  })
+
+  const stringifiedParams = normalizedParams.toString()
+
+  return stringifiedParams.length > 0 ? `http://localhost:8080/api/cohorts/sync?${stringifiedParams}` : `http://localhost:8080/api/cohorts/sync`
+}
+
+export async function sync(params: SyncParams, options?: RequestInit): Promise<syncResponse> {
+  const res = await fetch(getSyncUrl(params), {
+    ...options,
+    method: 'POST',
+
+  })
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+
+  const data: syncResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as syncResponse
+}
+
+export function getSyncMutationOptions<TError = unknown, TContext = unknown>(options?: { mutation?: UseMutationOptions<Awaited<ReturnType<typeof sync>>, TError, { params: SyncParams }, TContext>, fetch?: RequestInit }): UseMutationOptions<Awaited<ReturnType<typeof sync>>, TError, { params: SyncParams }, TContext> {
+  const mutationKey = ['sync']
+  const { mutation: mutationOptions, fetch: fetchOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, fetch: undefined }
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof sync>>, { params: SyncParams }> = (props) => {
+    const { params } = props ?? {}
+
+    return sync(params, fetchOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type SyncMutationResult = NonNullable<Awaited<ReturnType<typeof sync>>>
+
+export type SyncMutationError = unknown
+
+export function useSync<TError = unknown, TContext = unknown>(options?: { mutation?: UseMutationOptions<Awaited<ReturnType<typeof sync>>, TError, { params: SyncParams }, TContext>, fetch?: RequestInit }, queryClient?: QueryClient): UseMutationResult<
+  Awaited<ReturnType<typeof sync>>,
+  TError,
+  { params: SyncParams },
+  TContext
+> {
+  return useMutation(getSyncMutationOptions(options), queryClient)
+}
+
 export interface moveEntryResponse200 {
   data: void
   status: 200
@@ -791,23 +859,23 @@ export function useGetConflicts<TData = Awaited<ReturnType<typeof getConflicts>>
   return { ...query, queryKey: queryOptions.queryKey }
 }
 
-export interface getAvailableSlotsResponse200 {
-  data: SlotView[]
+export interface getAllCohortsResponse200 {
+  data: CohortView[]
   status: 200
 }
 
-export type getAvailableSlotsResponseSuccess = (getAvailableSlotsResponse200) & {
+export type getAllCohortsResponseSuccess = (getAllCohortsResponse200) & {
   headers: Headers
 }
 
-export type getAvailableSlotsResponse = (getAvailableSlotsResponseSuccess)
+export type getAllCohortsResponse = (getAllCohortsResponseSuccess)
 
-export function getGetAvailableSlotsUrl(timetableId: string) {
-  return `http://localhost:8080/api/timetables/${timetableId}/available-slots`
+export function getGetAllCohortsUrl() {
+  return `http://localhost:8080/api/cohorts`
 }
 
-export async function getAvailableSlots(timetableId: string, options?: RequestInit): Promise<getAvailableSlotsResponse> {
-  const res = await fetch(getGetAvailableSlotsUrl(timetableId), {
+export async function getAllCohorts(options?: RequestInit): Promise<getAllCohortsResponse> {
+  const res = await fetch(getGetAllCohortsUrl(), {
     ...options,
     method: 'GET',
 
@@ -815,147 +883,61 @@ export async function getAvailableSlots(timetableId: string, options?: RequestIn
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
 
-  const data: getAvailableSlotsResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getAvailableSlotsResponse
+  const data: getAllCohortsResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as getAllCohortsResponse
 }
 
-export function getGetAvailableSlotsQueryKey(timetableId: string) {
+export function getGetAllCohortsQueryKey() {
   return [
-    `http://localhost:8080/api/timetables/${timetableId}/available-slots`,
+    `http://localhost:8080/api/cohorts`,
   ] as const
 }
 
-export function getGetAvailableSlotsQueryOptions<TData = Awaited<ReturnType<typeof getAvailableSlots>>, TError = unknown>(timetableId: string, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAvailableSlots>>, TError, TData>>, fetch?: RequestInit }) {
+export function getGetAllCohortsQueryOptions<TData = Awaited<ReturnType<typeof getAllCohorts>>, TError = unknown>(options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllCohorts>>, TError, TData>>, fetch?: RequestInit }) {
   const { query: queryOptions, fetch: fetchOptions } = options ?? {}
 
-  const queryKey = queryOptions?.queryKey ?? getGetAvailableSlotsQueryKey(timetableId)
+  const queryKey = queryOptions?.queryKey ?? getGetAllCohortsQueryKey()
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAvailableSlots>>> = ({ signal }) => getAvailableSlots(timetableId, { signal, ...fetchOptions })
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAllCohorts>>> = ({ signal }) => getAllCohorts({ signal, ...fetchOptions })
 
-  return { queryKey, queryFn, enabled: !!(timetableId), ...queryOptions } as UseQueryOptions<Awaited<ReturnType<typeof getAvailableSlots>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<Awaited<ReturnType<typeof getAllCohorts>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetAvailableSlotsQueryResult = NonNullable<Awaited<ReturnType<typeof getAvailableSlots>>>
-export type GetAvailableSlotsQueryError = unknown
+export type GetAllCohortsQueryResult = NonNullable<Awaited<ReturnType<typeof getAllCohorts>>>
+export type GetAllCohortsQueryError = unknown
 
-export function useGetAvailableSlots<TData = Awaited<ReturnType<typeof getAvailableSlots>>, TError = unknown>(
-  timetableId: string, options: { query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAvailableSlots>>, TError, TData>> & Pick<
+export function useGetAllCohorts<TData = Awaited<ReturnType<typeof getAllCohorts>>, TError = unknown>(
+  options: { query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllCohorts>>, TError, TData>> & Pick<
     DefinedInitialDataOptions<
-      Awaited<ReturnType<typeof getAvailableSlots>>,
+      Awaited<ReturnType<typeof getAllCohorts>>,
       TError,
-      Awaited<ReturnType<typeof getAvailableSlots>>
+      Awaited<ReturnType<typeof getAllCohorts>>
     >,
     'initialData'
   >, fetch?: RequestInit },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAvailableSlots<TData = Awaited<ReturnType<typeof getAvailableSlots>>, TError = unknown>(
-  timetableId: string, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAvailableSlots>>, TError, TData>> & Pick<
+export function useGetAllCohorts<TData = Awaited<ReturnType<typeof getAllCohorts>>, TError = unknown>(
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllCohorts>>, TError, TData>> & Pick<
     UndefinedInitialDataOptions<
-      Awaited<ReturnType<typeof getAvailableSlots>>,
+      Awaited<ReturnType<typeof getAllCohorts>>,
       TError,
-      Awaited<ReturnType<typeof getAvailableSlots>>
+      Awaited<ReturnType<typeof getAllCohorts>>
     >,
     'initialData'
   >, fetch?: RequestInit },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetAvailableSlots<TData = Awaited<ReturnType<typeof getAvailableSlots>>, TError = unknown>(
-  timetableId: string, options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAvailableSlots>>, TError, TData>>, fetch?: RequestInit },
+export function useGetAllCohorts<TData = Awaited<ReturnType<typeof getAllCohorts>>, TError = unknown>(
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllCohorts>>, TError, TData>>, fetch?: RequestInit },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetAvailableSlots<TData = Awaited<ReturnType<typeof getAvailableSlots>>, TError = unknown>(
-  timetableId: string,
-  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAvailableSlots>>, TError, TData>>, fetch?: RequestInit },
+export function useGetAllCohorts<TData = Awaited<ReturnType<typeof getAllCohorts>>, TError = unknown>(
+  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getAllCohorts>>, TError, TData>>, fetch?: RequestInit },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetAvailableSlotsQueryOptions(timetableId, options)
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  return { ...query, queryKey: queryOptions.queryKey }
-}
-
-export interface getSlotsResponse200 {
-  data: LegacyLessonSlotGroup[]
-  status: 200
-}
-
-export type getSlotsResponseSuccess = (getSlotsResponse200) & {
-  headers: Headers
-}
-
-export type getSlotsResponse = (getSlotsResponseSuccess)
-
-export function getGetSlotsUrl() {
-  return `http://localhost:8080/api/acl/slots`
-}
-
-export async function getSlots(options?: RequestInit): Promise<getSlotsResponse> {
-  const res = await fetch(getGetSlotsUrl(), {
-    ...options,
-    method: 'GET',
-
-  })
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-
-  const data: getSlotsResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getSlotsResponse
-}
-
-export function getGetSlotsQueryKey() {
-  return [
-    `http://localhost:8080/api/acl/slots`,
-  ] as const
-}
-
-export function getGetSlotsQueryOptions<TData = Awaited<ReturnType<typeof getSlots>>, TError = unknown>(options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlots>>, TError, TData>>, fetch?: RequestInit }) {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {}
-
-  const queryKey = queryOptions?.queryKey ?? getGetSlotsQueryKey()
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSlots>>> = ({ signal }) => getSlots({ signal, ...fetchOptions })
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<Awaited<ReturnType<typeof getSlots>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetSlotsQueryResult = NonNullable<Awaited<ReturnType<typeof getSlots>>>
-export type GetSlotsQueryError = unknown
-
-export function useGetSlots<TData = Awaited<ReturnType<typeof getSlots>>, TError = unknown>(
-  options: { query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlots>>, TError, TData>> & Pick<
-    DefinedInitialDataOptions<
-      Awaited<ReturnType<typeof getSlots>>,
-      TError,
-      Awaited<ReturnType<typeof getSlots>>
-    >,
-    'initialData'
-  >, fetch?: RequestInit },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSlots<TData = Awaited<ReturnType<typeof getSlots>>, TError = unknown>(
-  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlots>>, TError, TData>> & Pick<
-    UndefinedInitialDataOptions<
-      Awaited<ReturnType<typeof getSlots>>,
-      TError,
-      Awaited<ReturnType<typeof getSlots>>
-    >,
-    'initialData'
-  >, fetch?: RequestInit },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSlots<TData = Awaited<ReturnType<typeof getSlots>>, TError = unknown>(
-  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlots>>, TError, TData>>, fetch?: RequestInit },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useGetSlots<TData = Awaited<ReturnType<typeof getSlots>>, TError = unknown>(
-  options?: { query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSlots>>, TError, TData>>, fetch?: RequestInit },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetSlotsQueryOptions(options)
+  const queryOptions = getGetAllCohortsQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 

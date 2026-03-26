@@ -4,12 +4,16 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
+import type { PlaceEntryRequestDay } from './place-entry-request-day'
+import type { PlaceEntryRequestDeliveryMode } from './place-entry-request-delivery-mode'
 
 export interface PlaceEntryRequest {
   /** @minLength 1 */
   assignmentId: string
-  /** @minLength 1 */
-  timeSlotId: string
+  day: PlaceEntryRequestDay
+  startTime: string
+  endTime: string
+  deliveryMode: PlaceEntryRequestDeliveryMode
   roomId?: string
   /** @minLength 1 */
   primaryLecturerId: string

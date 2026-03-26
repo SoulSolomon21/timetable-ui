@@ -17,4 +17,5 @@ export interface EntryView {
   category?: string
   practical?: boolean
   hasConflict?: boolean
+  conflictIds?: string[]
 }

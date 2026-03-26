@@ -4,6 +4,7 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
+import type { BlockedWindowView } from './blocked-window-view'
 import type { SlotView } from './slot-view'
 
 export interface TimetableGridView {
@@ -14,5 +15,8 @@ export interface TimetableGridView {
   session?: number
   status?: string
   unresolvedConflictCount?: number
+  viewportStart?: string
+  viewportEnd?: string
+  blockedWindows?: BlockedWindowView[]
   slots?: SlotView[]
 }

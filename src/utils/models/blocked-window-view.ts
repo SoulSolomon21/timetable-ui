@@ -4,12 +4,10 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import type { EntryView } from './entry-view'
 
-export interface SlotView {
+export interface BlockedWindowView {
   day?: string
   startTime?: string
   endTime?: string
-  blocked?: boolean
-  entry?: EntryView
+  label?: string
 }

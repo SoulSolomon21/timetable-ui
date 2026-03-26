@@ -33,7 +33,7 @@ export const WEEK_DAYS = [
   { label: 'Wednesday', short: 'Wed', narrow: 'W', dayOfWeek: 2 as TDayOfWeek },
   { label: 'Thursday', short: 'Thu', narrow: 'Th', dayOfWeek: 3 as TDayOfWeek },
   { label: 'Friday', short: 'Fri', narrow: 'F', dayOfWeek: 4 as TDayOfWeek },
-  // { label: 'Saturday', short: 'Sat', narrow: 'S', dayOfWeek: 5 as TDayOfWeek },
+  { label: 'Saturday', short: 'Sat', narrow: 'S', dayOfWeek: 5 as TDayOfWeek },
 ] as const
 
 export type TWeekDay = typeof WEEK_DAYS[number]

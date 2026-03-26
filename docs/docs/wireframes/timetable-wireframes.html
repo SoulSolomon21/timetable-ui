@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UCU Timetable — Hi-Fi Wireframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F9FAFB;
+  --surface:#FFFFFF;
+  --border:#E5E7EB;
+  --border-strong:#D1D5DB;
+  --text-1:#111827;
+  --text-2:#374151;
+  --text-3:#6B7280;
+  --text-4:#9CA3AF;
+  --crimson:#BE123C;
+  --crimson-bg:#FFF1F2;
+  --danger:#DC2626;
+  --danger-bg:#FEF2F2;
+  --danger-border:#FECACA;
+  --amber:#B45309;
+  --amber-bg:#FFFBEB;
+  --amber-border:#FDE68A;
+  --success:#15803D;
+  --success-bg:#F0FDF4;
+  --success-border:#BBF7D0;
+  --blue:#1D4ED8;
+  --blue-bg:#EFF6FF;
+  --blue-border:#BFDBFE;
+  --nav-h:52px;
+  --sidebar-w:260px;
+  --radius:8px;
+  --radius-lg:12px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text-1);font-size:14px;line-height:1.5;min-height:100vh;}
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* NAV */
+.topnav{height:var(--nav-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;flex-shrink:0;position:sticky;top:0;z-index:50;}
+.nav-brand{font-weight:600;font-size:15px;color:var(--text-1);white-space:nowrap;}
+.nav-tabs{display:flex;gap:2px;margin-left:4px;}
+.nav-tab{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;color:var(--text-3);cursor:pointer;transition:all .15s;border:none;background:none;}
+.nav-tab:hover{background:var(--bg);color:var(--text-2);}
+.nav-tab.active{background:#111827;color:#fff;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.sem-badge{border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--text-2);line-height:1.3;text-align:right;}
+.avatar{width:32px;height:32px;border-radius:50%;background:#374151;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;}
+
+/* BREADCRUMB NAV */
+.breadnav{height:var(--nav-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:8px;flex-shrink:0;position:sticky;top:0;z-index:50;}
+.breadcrumb-back{font-size:13px;color:var(--text-3);cursor:pointer;display:flex;align-items:center;gap:4px;}
+.breadcrumb-back:hover{color:var(--text-1);}
+.breadcrumb-sep{color:var(--text-4);font-size:12px;}
+.breadcrumb-item{font-size:13px;color:var(--text-3);cursor:pointer;}
+.breadcrumb-item:hover{color:var(--text-2);}
+.breadcrumb-item.current{color:var(--text-1);font-weight:500;}
+.breadnav-actions{margin-left:auto;display:flex;gap:8px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:var(--surface);color:var(--text-1);}
+.btn:hover{background:var(--bg);}
+.btn-primary{background:var(--crimson);color:#fff;border-color:var(--crimson);}
+.btn-primary:hover{background:#9f1239;}
+.btn-dark{background:#111827;color:#fff;border-color:#111827;}
+.btn-dark:hover{background:#1f2937;}
+.btn-ghost{border:none;background:none;color:var(--text-3);}
+.btn-ghost:hover{color:var(--text-1);background:var(--bg);}
+.btn-sm{padding:5px 10px;font-size:12px;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:500;}
+.badge-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);}
+.badge-success{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border);}
+.badge-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);}
+.badge-neutral{background:var(--bg);color:var(--text-2);border:1px solid var(--border);}
+.badge-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);}
+
+/* PAGE SHELL */
+.page-body{flex:1;overflow:auto;}
+.page-content{padding:24px;max-width:900px;margin:0 auto;}
+.page-content-wide{padding:24px;max-width:1200px;margin:0 auto;}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;}
+.card+.card{margin-top:12px;}
+.card-sm{padding:14px 16px;}
+
+/* STAT TILES */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.stat-grid-4{grid-template-columns:repeat(4,1fr);}
+.stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;cursor:pointer;transition:all .15s;}
+.stat-tile:hover{border-color:var(--border-strong);}
+.stat-num{font-size:28px;font-weight:600;line-height:1;margin-bottom:4px;}
+.stat-label{font-size:13px;color:var(--text-3);}
+.stat-num.danger{color:var(--danger);}
+.stat-num.amber{color:#D97706;}
+.stat-num.success{color:var(--success);}
+
+/* SECTION HEADER */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:28px;}
+.section-header:first-child{margin-top:0;}
+.section-title{font-size:14px;font-weight:500;color:var(--text-1);}
+
+/* DEPT CARDS */
+.dept-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;transition:all .15s;margin-bottom:8px;}
+.dept-card:hover{border-color:var(--border-strong);box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.dept-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dept-icon.danger{background:var(--danger-bg);}
+.dept-icon.success{background:var(--success-bg);}
+.dept-icon.neutral{background:var(--bg);}
+.dept-info{flex:1;}
+.dept-name{font-size:14px;font-weight:500;color:var(--text-1);}
+.dept-meta{font-size:12px;color:var(--text-3);margin-top:2px;}
+.dept-right{display:flex;align-items:center;gap:8px;}
+.chevron{color:var(--text-4);font-size:14px;}
+
+/* ICON SVGs */
+.icon{width:16px;height:16px;flex-shrink:0;}
+.icon-danger path,.icon-danger polygon,.icon-danger rect{fill:var(--danger);}
+.icon-success path,.icon-success polygon{fill:var(--success);}
+.icon-neutral path{fill:var(--text-3);}
+
+/* DEPT OVERVIEW */
+.dept-header-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;}
+.dept-header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+.dept-header-icon{width:44px;height:44px;border-radius:10px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dept-header-info{flex:1;}
+.dept-header-name{font-size:18px;font-weight:600;color:var(--text-1);}
+.dept-header-sub{font-size:13px;color:var(--text-3);margin-top:2px;}
+.dept-header-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+
+/* PROGRAM CARDS */
+.program-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:12px;}
+.program-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.program-name{font-size:14px;font-weight:600;color:var(--text-1);}
+.program-sub{font-size:12px;color:var(--text-3);margin-top:2px;}
+.cohort-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--border);}
+.cohort-year{font-size:13px;color:var(--text-2);width:48px;flex-shrink:0;}
+.progress-bar-wrap{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;}
+.progress-bar{height:100%;border-radius:3px;}
+.bar-danger{background:#FCA5A5;}
+.bar-danger-fill{background:var(--danger);}
+.bar-success{background:#6EE7B7;}
+.bar-success-fill{background:var(--success);}
+.bar-neutral{background:var(--border);}
+.cohort-status{font-size:12px;width:80px;text-align:right;flex-shrink:0;}
+.cohort-btn{flex-shrink:0;}
+
+/* TIMETABLE GRID */
+.grid-layout{display:flex;flex:1;overflow:hidden;}
+.grid-sidebar{width:var(--sidebar-w);border-right:1px solid var(--border);background:var(--surface);overflow-y:auto;flex-shrink:0;}
+.sidebar-section{padding:14px 14px 0;}
+.sidebar-section-title{font-size:11px;font-weight:600;color:var(--text-4);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;}
+.cohort-item{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:6px;cursor:pointer;transition:all .12s;}
+.cohort-item:hover{background:var(--bg);}
+.cohort-item.selected{background:var(--blue-bg);}
+.cohort-name{font-size:13px;color:var(--text-2);}
+.cohort-dot{width:8px;height:8px;border-radius:50%;}
+.conflict-item{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius);padding:8px 10px;margin-bottom:6px;cursor:pointer;transition:all .12s;}
+.conflict-item:hover{border-color:var(--danger);}
+.conflict-item-title{font-size:12px;font-weight:500;color:var(--danger);}
+.conflict-item-meta{font-size:11px;color:#DC2626;opacity:.75;margin-top:2px;}
+.grid-main{flex:1;overflow:auto;}
+.grid-topbar{height:44px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:10px;padding:0 16px;flex-shrink:0;position:sticky;top:0;z-index:10;}
+.view-toggle{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.view-btn{padding:5px 14px;font-size:12px;font-weight:500;border:none;cursor:pointer;transition:all .12s;}
+.view-btn.active{background:#111827;color:#fff;}
+.view-btn:not(.active){background:var(--surface);color:var(--text-2);}
+.cohort-select{border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:13px;font-family:inherit;color:var(--text-1);background:var(--surface);cursor:pointer;flex:1;max-width:300px;}
+.timetable{display:flex;overflow:auto;}
+.time-col{width:60px;flex-shrink:0;padding-top:32px;}
+.time-slot{height:72px;display:flex;align-items:flex-start;padding-top:4px;padding-right:8px;font-size:11px;color:var(--text-4);justify-content:flex-end;}
+.days-grid{flex:1;display:flex;}
+.day-col{flex:1;border-right:1px solid var(--border);min-width:100px;}
+.day-header{height:32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--text-2);background:var(--surface);position:sticky;top:0;}
+.day-body{position:relative;}
+.hour-row{height:72px;border-bottom:1px dashed var(--border);}
+.event-block{position:absolute;left:4px;right:4px;border-radius:6px;padding:4px 6px;font-size:11px;font-weight:500;cursor:pointer;overflow:hidden;transition:all .12s;}
+.event-block:hover{filter:brightness(.95);}
+.ev-blue{background:#DBEAFE;color:#1E40AF;}
+.ev-teal{background:#CCFBF1;color:#0F766E;}
+.ev-amber{background:#FEF3C7;color:#92400E;}
+.ev-purple{background:#EDE9FE;color:#5B21B6;}
+.ev-rose{background:#FFE4E6;color:#9F1239;}
+.ev-green{background:#DCFCE7;color:#15803D;}
+.ev-orange{background:#FFEDD5;color:#C2410C;}
+.ev-conflict{border:1px solid var(--danger-border);}
+.event-conflict-badge{position:absolute;top:3px;right:3px;width:14px;height:14px;background:var(--danger);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:700;}
+.event-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.event-meta{font-size:10px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* CONFLICT PANEL */
+.conflict-panel-overlay{position:absolute;right:0;top:0;width:380px;height:100%;background:var(--surface);border-left:1px solid var(--border);z-index:20;display:flex;flex-direction:column;box-shadow:-4px 0 16px rgba(0,0,0,.06);}
+.conflict-panel-header{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;}
+.conflict-panel-title{font-size:15px;font-weight:600;color:var(--text-1);}
+.conflict-panel-sub{font-size:12px;color:var(--text-3);margin-top:2px;}
+.conflict-panel-body{flex:1;overflow-y:auto;padding:16px 18px;}
+.conflict-section{margin-bottom:16px;}
+.conflict-section-title{font-size:11px;font-weight:600;color:var(--text-4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+.conflict-slots{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.conflict-slot-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;}
+.conflict-slot-label{font-size:11px;font-weight:600;color:var(--text-4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.conflict-slot-name{font-size:13px;font-weight:600;color:var(--text-1);}
+.conflict-slot-meta{font-size:12px;color:var(--text-3);}
+.conflict-room-card{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius);padding:10px 12px;margin-bottom:12px;}
+.conflict-room-label{font-size:11px;font-weight:600;color:var(--danger);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.conflict-room-name{font-size:13px;font-weight:600;color:var(--danger);}
+.conflict-room-sub{font-size:12px;color:var(--danger);opacity:.75;}
+.fix-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s;}
+.fix-card:hover{border-color:var(--border-strong);box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.fix-card.recommended{background:var(--success-bg);border-color:var(--success-border);}
+.fix-title{font-size:13px;font-weight:500;color:var(--text-1);display:flex;align-items:center;justify-content:space-between;}
+.fix-card.recommended .fix-title{color:var(--success);}
+.fix-desc{font-size:12px;color:var(--text-3);margin-top:4px;}
+.fix-card.recommended .fix-desc{color:var(--success);opacity:.8;}
+.fix-action{font-size:11px;color:var(--text-4);margin-top:6px;}
+.conflict-panel-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:8px;}
+
+/* PUBLISH REVIEW */
+.status-banner{border-radius:var(--radius-lg);padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.status-banner.success{background:var(--success-bg);border:1px solid var(--success-border);}
+.status-banner-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--success);flex-shrink:0;}
+.status-banner-text{font-size:14px;font-weight:500;color:var(--success);}
+.status-banner-sub{font-size:12px;color:var(--success);opacity:.8;}
+.cohort-table-wrap{border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.cohort-table{width:100%;border-collapse:collapse;}
+.cohort-table th{background:var(--bg);border-bottom:1px solid var(--border);padding:8px 14px;font-size:11px;font-weight:600;color:var(--text-4);text-transform:uppercase;letter-spacing:.04em;text-align:left;}
+.cohort-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-1);}
+.cohort-table tr:last-child td{border-bottom:none;}
+.slot-chips{display:flex;gap:4px;flex-wrap:wrap;}
+.slot-chip{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:2px 8px;font-size:11px;color:var(--text-2);}
+.consequences-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);}
+.consequences-header{padding:14px 18px;border-bottom:1px solid var(--border);}
+.consequences-title{font-size:14px;font-weight:500;color:var(--text-1);}
+.consequences-sub{font-size:12px;color:var(--text-3);margin-top:2px;}
+.consequence-item{display:flex;align-items:flex-start;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);}
+.consequence-item:last-child{border-bottom:none;}
+.check-box{width:20px;height:20px;border-radius:4px;background:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.consequence-text{font-size:13px;font-weight:500;color:var(--text-1);}
+.consequence-sub{font-size:12px;color:var(--text-3);margin-top:1px;}
+.warn-banner{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--radius-lg);padding:14px 18px;margin-top:16px;}
+.warn-title{font-size:13px;font-weight:500;color:var(--amber);}
+.warn-body{font-size:12px;color:var(--amber);margin-top:4px;opacity:.9;}
+
+/* PUBLISH DEPT */
+.cohort-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.cohort-summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;}
+.cohort-summary-name{font-size:14px;font-weight:600;color:var(--text-1);margin-bottom:8px;}
+.cohort-summary-tags{display:flex;gap:6px;flex-wrap:wrap;}
+
+/* GRID RELATIVE WRAPPER */
+.grid-content-area{position:relative;flex:1;display:flex;flex-direction:column;overflow:hidden;}
+</style>
+</head>
+<body>
+
+<!-- ===================== SCREEN 1: WORK QUEUE ===================== -->
+<div class="screen active" id="s1">
+  <nav class="topnav">
+    <span class="nav-brand">UCU Timetable</span>
+    <div class="nav-tabs">
+      <button class="nav-tab active">Scheduling</button>
+      <button class="nav-tab">Rooms</button>
+      <button class="nav-tab">Lecturers</button>
+    </div>
+    <div class="nav-right">
+      <div class="sem-badge">Sem 2 ·<br>2025/26</div>
+      <div class="avatar">SO</div>
+    </div>
+  </nav>
+  <div class="page-body">
+    <div class="page-content">
+      <div class="stat-grid">
+        <div class="stat-tile"><div class="stat-num danger">3</div><div class="stat-label">Needs attention</div></div>
+        <div class="stat-tile"><div class="stat-num amber">2</div><div class="stat-label">Ready to review</div></div>
+        <div class="stat-tile"><div class="stat-num success">5</div><div class="stat-label">Published</div></div>
+      </div>
+
+      <div class="section-header">
+        <span class="section-title">Needs attention</span>
+        <span class="badge badge-neutral">3 departments</span>
+      </div>
+      <div class="dept-card" onclick="go('s2')">
+        <div class="dept-icon danger">
+          <svg class="icon icon-danger" viewBox="0 0 16 16"><path d="M8 1.5L1 14h14L8 1.5zM8 5v5M8 11.5v1" stroke="#DC2626" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div class="dept-info">
+          <div class="dept-name">Computer Science</div>
+          <div class="dept-meta">4 cohorts · 3 conflicts · draft generated 2h ago</div>
+        </div>
+        <div class="dept-right">
+          <span class="badge badge-danger">3 conflicts</span>
+          <span class="chevron">›</span>
+        </div>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon danger">
+          <svg class="icon icon-danger" viewBox="0 0 16 16"><path d="M8 1.5L1 14h14L8 1.5zM8 5v5M8 11.5v1" stroke="#DC2626" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div class="dept-info">
+          <div class="dept-name">Business Administration</div>
+          <div class="dept-meta">6 cohorts · 1 conflict · draft generated 4h ago</div>
+        </div>
+        <div class="dept-right">
+          <span class="badge badge-danger">1 conflict</span>
+          <span class="chevron">›</span>
+        </div>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon danger">
+          <svg class="icon icon-danger" viewBox="0 0 16 16"><path d="M8 1.5L1 14h14L8 1.5zM8 5v5M8 11.5v1" stroke="#DC2626" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div class="dept-info">
+          <div class="dept-name">Education</div>
+          <div class="dept-meta">3 cohorts · 2 conflicts · draft generated 1h ago</div>
+        </div>
+        <div class="dept-right">
+          <span class="badge badge-danger">2 conflicts</span>
+          <span class="chevron">›</span>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <span class="section-title">Ready to review</span>
+        <span class="badge badge-neutral">2 departments</span>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon success">
+          <svg class="icon icon-success" viewBox="0 0 16 16"><path d="M3 8l3.5 3.5L13 4.5" stroke="#15803D" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="dept-info">
+          <div class="dept-name">Engineering</div>
+          <div class="dept-meta">5 cohorts · no conflicts · ready to publish</div>
+        </div>
+        <div class="dept-right">
+          <span class="badge badge-amber">Review &amp; publish</span>
+          <span class="chevron">›</span>
+        </div>
+      </div>
+      <div class="dept-card">
+        <div class="dept-icon success">
+          <svg class="icon icon-success" viewBox="0 0 16 16"><path d="M3 8l3.5 3.5L13 4.5" stroke="#15803D" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="dept-info">
+          <div class="dept-name">Social Sciences</div>
+          <div class="dept-meta">4 cohorts · no conflicts · ready to publish</div>
+        </div>
+        <div class="dept-right">
+          <span class="badge badge-amber">Review &amp; publish</span>
+          <span class="chevron">›</span>
+        </div>
+      </div>
+
+      <div class="section-header"><span class="section-title">Awaiting assignments</span></div>
+      <div class="dept-card">
+        <div class="dept-icon neutral">
+          <svg class="icon icon-neutral" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" stroke="#6B7280" stroke-width="1.5" fill="none"/><path d="M8 5.5v3.5" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11" r=".75" fill="#6B7280"/></svg>
+        </div>
+        <div class="dept-info">
+          <div class="dept-name">Law</div>
+          <div class="dept-meta">Assignments not yet approved in Alpha-MIS</div>
+        </div>
+        <div class="dept-right">
+          <span class="badge badge-neutral">Waiting</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 2: DEPT OVERVIEW ===================== -->
+<div class="screen" id="s2">
+  <nav class="breadnav">
+    <span class="breadcrumb-back" onclick="go('s1')">← Work queue</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-item current">Computer Science</span>
+    <div class="breadnav-actions">
+      <button class="btn btn-sm">Export PDF</button>
+    </div>
+  </nav>
+  <div class="page-body">
+    <div class="page-content">
+      <div class="dept-header-card">
+        <div class="dept-header-top">
+          <div style="display:flex;gap:14px;align-items:flex-start;flex:1;">
+            <div class="dept-header-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="5" width="16" height="12" rx="2" stroke="#6B7280" stroke-width="1.5"/><path d="M8 18h6M11 17v1" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="dept-header-info">
+              <div class="dept-header-name">Computer Science</div>
+              <div class="dept-header-sub">Easter 2026 · 4 programs · 12 cohorts · 18 lecturers</div>
+              <div class="dept-header-badges">
+                <span class="badge badge-danger">3 conflicts</span>
+                <span class="badge badge-success">2 programs ready</span>
+                <span class="badge badge-neutral">Draft generated 2h ago</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-dark">Publish all ready →</button>
+        </div>
+      </div>
+
+      <div class="stat-grid stat-grid-4" style="margin-bottom:24px;">
+        <div class="stat-tile"><div class="stat-num">12</div><div class="stat-label">Total cohorts</div></div>
+        <div class="stat-tile"><div class="stat-num danger">3</div><div class="stat-label">Unresolved conflicts</div></div>
+        <div class="stat-tile"><div class="stat-num">274</div><div class="stat-label">Students affected</div></div>
+        <div class="stat-tile"><div class="stat-num">18</div><div class="stat-label">Lecturers assigned</div></div>
+      </div>
+
+      <div style="font-size:11px;font-weight:600;color:var(--text-4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;">Programs</div>
+
+      <!-- BSc Computer Science -->
+      <div class="program-card">
+        <div class="program-header">
+          <div>
+            <div class="program-name">BSc Computer Science</div>
+            <div class="program-sub">BSCS · 3 cohorts</div>
+          </div>
+          <span class="badge badge-danger">1 conflict</span>
+        </div>
+        <div class="cohort-row">
+          <span class="cohort-year">Year 1</span>
+          <div class="progress-bar-wrap"><div class="progress-bar bar-danger-fill" style="width:85%"></div></div>
+          <span class="cohort-status" style="color:var(--danger);">2 conflicts</span>
+          <button class="btn btn-sm cohort-btn" onclick="go('s3')">Open grid →</button>
+        </div>
+        <div class="cohort-row">
+          <span class="cohort-year">Year 2</span>
+          <div class="progress-bar-wrap"><div class="progress-bar bar-success-fill" style="width:75%"></div></div>
+          <span class="cohort-status" style="color:var(--success);">Ready</span>
+          <button class="btn btn-sm cohort-btn" onclick="go('s3')">Open grid →</button>
+        </div>
+        <div class="cohort-row">
+          <span class="cohort-year">Year 3</span>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:65%;background:var(--border-strong)"></div></div>
+          <span class="cohort-status" style="color:var(--text-3);">Published</span>
+          <button class="btn btn-sm cohort-btn">View →</button>
+        </div>
+      </div>
+
+      <!-- BSc IT -->
+      <div class="program-card">
+        <div class="program-header">
+          <div>
+            <div class="program-name">BSc Information Technology</div>
+            <div class="program-sub">BSIT · 3 cohorts</div>
+          </div>
+          <span class="badge badge-danger">2 conflicts</span>
+        </div>
+        <div class="cohort-row">
+          <span class="cohort-year">Year 1</span>
+          <div class="progress-bar-wrap"><div class="progress-bar bar-success-fill" style="width:70%"></div></div>
+          <span class="cohort-status" style="color:var(--success);">Ready</span>
+          <button class="btn btn-sm cohort-btn" onclick="go('s3')">Open grid →</button>
+        </div>
+        <div class="cohort-row">
+          <span class="cohort-year">Year 2</span>
+          <div class="progress-bar-wrap"><div class="progress-bar bar-danger-fill" style="width:60%"></div></div>
+          <span class="cohort-status" style="color:var(--danger);">1 conflict</span>
+          <button class="btn btn-sm cohort-btn" onclick="go('s3')">Open grid →</button>
+        </div>
+        <div class="cohort-row">
+          <span class="cohort-year">Year 3</span>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:65%;background:var(--border-strong)"></div></div>
+          <span class="cohort-status" style="color:var(--text-3);">Published</span>
+          <button class="btn btn-sm cohort-btn">View →</button>
+        </div>
+      </div>
+
+      <!-- BSc SE -->
+      <div class="program-card">
+        <div class="program-header">
+          <div>
+            <div class="program-name">BSc Software Engineering</div>
+            <div class="program-sub">BSSE · 3 cohorts</div>
+          </div>
+          <span class="badge badge-success">All ready</span>
+        </div>
+        <div class="cohort-row">
+          <span class="cohort-year">Year 1</span>
+          <div class="progress-bar-wrap"><div class="progress-bar bar-success-fill" style="width:80%"></div></div>
+          <span class="cohort-status" style="color:var(--success);">Ready</span>
+          <button class="btn btn-sm cohort-btn" onclick="go('s5')">Open grid →</button>
+        </div>
+        <div class="cohort-row">
+          <span class="cohort-year">Year 2</span>
+          <div class="progress-bar-wrap"><div class="progress-bar bar-success-fill" style="width:72%"></div></div>
+          <span class="cohort-status" style="color:var(--success);">Ready</span>
+          <button class="btn btn-sm cohort-btn" onclick="go('s5')">Open grid →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 3: TIMETABLE GRID ===================== -->
+<div class="screen" id="s3" style="overflow:hidden;">
+  <nav class="breadnav">
+    <span class="breadcrumb-back" onclick="go('s2')">← Work queue</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-item" onclick="go('s2')">Computer Science</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-item current">Semester 2, 2025/26</span>
+    <div class="breadnav-actions">
+      <button class="btn btn-sm badge-danger" style="border-color:var(--danger-border);background:var(--danger-bg);color:var(--danger);">⚠ 3 conflicts</button>
+      <button class="btn btn-sm">Publish dept</button>
+    </div>
+  </nav>
+  <div class="grid-layout" style="flex:1;overflow:hidden;">
+    <!-- Sidebar -->
+    <div class="grid-sidebar">
+      <div class="sidebar-section" style="padding-bottom:12px;">
+        <div class="view-toggle" style="margin-bottom:12px;">
+          <button class="view-btn active">By cohort</button>
+          <button class="view-btn">By lecturer</button>
+        </div>
+        <div class="sidebar-section-title">Cohorts</div>
+        <div class="cohort-item"><span class="cohort-name">BSCS 1:1</span><span class="cohort-dot" style="background:#818CF8;"></span></div>
+        <div class="cohort-item selected"><span class="cohort-name" style="font-weight:500;">BSCS 2:2</span><span class="cohort-dot" style="background:#34D399;"></span></div>
+        <div class="cohort-item"><span class="cohort-name">BSCS 3:1</span><span class="cohort-dot" style="background:#FBBF24;"></span></div>
+        <div class="cohort-item"><span class="cohort-name">BSIT 1:1</span><span class="cohort-dot" style="background:#60A5FA;"></span></div>
+        <div class="cohort-item"><span class="cohort-name">BSIT 2:1</span><span class="cohort-dot" style="background:#F87171;"></span></div>
+      </div>
+      <div class="sidebar-section" style="padding-bottom:14px;">
+        <div class="sidebar-section-title">Conflicts (3)</div>
+        <div class="conflict-item" onclick="go('s4')">
+          <div class="conflict-item-title">Room overbooked</div>
+          <div class="conflict-item-meta">LT3 · Tue 10:00 · 2 cohorts</div>
+        </div>
+        <div class="conflict-item">
+          <div class="conflict-item-title">Lecturer clash</div>
+          <div class="conflict-item-meta">Dr. Mugisha · Wed 14:00</div>
+        </div>
+        <div class="conflict-item">
+          <div class="conflict-item-title">Room capacity</div>
+          <div class="conflict-item-meta">LT2 · 87 enrolled, cap 60</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid-content-area">
+      <div class="grid-topbar">
+        <select class="cohort-select"><option>BSCS 2:2</option></select>
+        <button class="btn btn-sm" style="margin-left:auto;">Export PDF</button>
+      </div>
+      <div style="flex:1;overflow:auto;">
+        <div class="timetable" style="padding:0 8px 24px;">
+          <div class="time-col">
+            <div class="time-slot" style="height:32px;"></div>
+            <div class="time-slot">8:00</div>
+            <div class="time-slot">9:00</div>
+            <div class="time-slot">10:00</div>
+            <div class="time-slot">11:00</div>
+            <div class="time-slot">12:00</div>
+            <div class="time-slot">14:00</div>
+            <div class="time-slot">15:00</div>
+          </div>
+          <div class="days-grid">
+            <div class="day-col">
+              <div class="day-header">Mon</div>
+              <div class="day-body">
+                <div class="hour-row"></div>
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-blue" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2101</div>
+                    <div class="event-meta">Dr. Nakato · LT1</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-teal" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2401</div>
+                    <div class="event-meta">Dr. Mutebi · LT3</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+              </div>
+            </div>
+            <div class="day-col">
+              <div class="day-header">Tue</div>
+              <div class="day-body">
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-amber" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2205</div>
+                    <div class="event-meta">Dr. Ssemakula · LT4</div>
+                  </div>
+                </div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-rose ev-conflict" style="top:0;height:68px;right:40%;" onclick="go('s4')">
+                    <div class="event-name">CSC 2205</div>
+                    <div class="event-meta">LT3 ← conflict</div>
+                    <div class="event-conflict-badge">!</div>
+                  </div>
+                </div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-purple" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2109</div>
+                    <div class="event-meta">Dr. Kiiza · LT1</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-teal" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2401</div>
+                    <div class="event-meta">Dr. Mutebi · LT3</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+              </div>
+            </div>
+            <div class="day-col">
+              <div class="day-header">Wed</div>
+              <div class="day-body">
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-blue" style="top:0;height:68px;">
+                    <div class="event-name">MAT 2201</div>
+                    <div class="event-meta">Dr. Atim · LT2</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-blue" style="top:0;height:68px;">
+                    <div class="event-name">MAT 2201</div>
+                    <div class="event-meta">Dr. Atim · LT2</div>
+                  </div>
+                </div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-rose ev-conflict" style="top:0;height:68px;" onclick="go('s4')">
+                    <div class="event-name">CSC 2301</div>
+                    <div class="event-meta">Dr. Mugisha ·…</div>
+                    <div class="event-conflict-badge">!</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-green" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2109</div>
+                    <div class="event-meta">Dr. Kiiza · LT1</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="day-col">
+              <div class="day-header">Thu</div>
+              <div class="day-body">
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-blue" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2101</div>
+                    <div class="event-meta">Dr. Nakato · LT1</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+                <div class="hour-row"></div>
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-amber" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2205</div>
+                    <div class="event-meta">Dr. Ssemakula ·…</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+              </div>
+            </div>
+            <div class="day-col">
+              <div class="day-header">Fri</div>
+              <div class="day-body">
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-purple" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2301</div>
+                    <div class="event-meta">Dr. Okullo · LAB1</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-purple" style="top:0;height:68px;">
+                    <div class="event-name">CSC 2109</div>
+                    <div class="event-meta">Dr. Kiiza · LT1</div>
+                  </div>
+                </div>
+                <div class="hour-row"></div>
+                <div class="hour-row"></div>
+                <div class="hour-row" style="position:relative;">
+                  <div class="event-block ev-orange" style="top:0;height:68px;">
+                    <div class="event-name">MAT 2201</div>
+                    <div class="event-meta">Dr. Atim · LT2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 4: CONFLICT PANEL ===================== -->
+<div class="screen" id="s4" style="overflow:hidden;">
+  <nav class="breadnav">
+    <span class="breadcrumb-back" onclick="go('s3')">← Work queue</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-item" onclick="go('s2')">Computer Science</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-item current">Semester 2, 2025/26</span>
+    <div class="breadnav-actions">
+      <button class="btn btn-sm" style="border-color:var(--danger-border);background:var(--danger-bg);color:var(--danger);">⚠ 3 conflicts</button>
+      <button class="btn btn-sm">Publish dept</button>
+    </div>
+  </nav>
+  <div style="display:flex;flex:1;overflow:hidden;position:relative;">
+    <!-- Dimmed grid (simplified) -->
+    <div style="flex:1;opacity:.4;pointer-events:none;overflow:hidden;background:var(--surface);">
+      <div style="font-size:12px;color:var(--text-3);padding:16px 20px;border-bottom:1px solid var(--border);">BSCS 2:2 · Tuesday</div>
+      <div class="timetable" style="padding:0 8px;">
+        <div class="time-col">
+          <div class="time-slot" style="height:32px;"></div>
+          <div class="time-slot">9:00</div>
+          <div class="time-slot">10:00</div>
+          <div class="time-slot">11:00</div>
+          <div class="time-slot">12:00</div>
+          <div class="time-slot">14:00</div>
+        </div>
+        <div style="flex:1;border:1px solid var(--border);margin-top:32px;">
+          <div class="hour-row" style="position:relative;">
+            <div class="event-block ev-teal" style="top:4px;height:62px;">
+              <div class="event-name">CSC 2205</div>
+              <div class="event-meta">LT4</div>
+            </div>
+          </div>
+          <div class="hour-row" style="position:relative;">
+            <div class="event-block ev-rose" style="top:4px;height:62px;right:40%;">
+              <div class="event-name">CSC 2205</div>
+              <div class="event-meta">LT3 ← conflict</div>
+            </div>
+          </div>
+          <div class="hour-row"></div>
+          <div class="hour-row"></div>
+          <div class="hour-row"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conflict panel -->
+    <div class="conflict-panel-overlay">
+      <div class="conflict-panel-header">
+        <div>
+          <div class="conflict-panel-title">Conflict — room overbooked</div>
+          <div class="conflict-panel-sub">LT3 · Tuesday 10:00–11:00</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="go('s3')" style="font-size:18px;line-height:1;">×</button>
+      </div>
+      <div class="conflict-panel-body">
+        <div style="margin-bottom:14px;">
+          <span class="badge badge-danger" style="font-size:12px;">⚠ Room double-booked</span>
+        </div>
+
+        <div class="conflict-section">
+          <div class="conflict-section-title">Conflicting slots</div>
+          <div class="conflict-slots">
+            <div class="conflict-slot-card">
+              <div class="conflict-slot-label">Slot 1</div>
+              <div class="conflict-slot-name">CSC 2205</div>
+              <div class="conflict-slot-meta">BSCS 2:2 · Dr. Mugisha</div>
+            </div>
+            <div class="conflict-slot-card">
+              <div class="conflict-slot-label">Slot 2</div>
+              <div class="conflict-slot-name">NET 1101</div>
+              <div class="conflict-slot-meta">BSIT 1:1 · Dr. Asiimwe</div>
+            </div>
+          </div>
+          <div class="conflict-room-card">
+            <div class="conflict-room-label">Room</div>
+            <div class="conflict-room-name">LT3 · capacity 80</div>
+            <div class="conflict-room-sub">Both cohorts assigned to same room, same time</div>
+          </div>
+        </div>
+
+        <div class="conflict-section">
+          <div class="conflict-section-title">Suggested fixes</div>
+          <div class="fix-card recommended">
+            <div class="fix-title">
+              Move CSC 2205 → LT5
+              <span style="font-size:11px;font-weight:600;">Recommended</span>
+            </div>
+            <div class="fix-desc">LT5 is free Tue 10:00–11:00, capacity 90 (92 enrolled ✕)</div>
+            <div class="fix-action">Tap to apply</div>
+          </div>
+          <div class="fix-card">
+            <div class="fix-title">Reschedule CSC 2205</div>
+            <div class="fix-desc">Move to Tue 14:00 · LT3 free, Dr. Mugisha free</div>
+            <div class="fix-action">Tap to apply · no lecturer conflicts</div>
+          </div>
+          <div class="fix-card">
+            <div class="fix-title">Move NET 1101 → LT6</div>
+            <div class="fix-desc">LT6 free Tue 10:00 · capacity 70 (48 enrolled ✓)</div>
+            <div class="fix-action">Tap to apply</div>
+          </div>
+        </div>
+      </div>
+      <div class="conflict-panel-footer">
+        <button class="btn" style="flex:1;" onclick="go('s3')">Skip for now</button>
+        <button class="btn btn-dark" style="flex:1;">Apply fix</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 5: PUBLISH REVIEW (COHORT) ===================== -->
+<div class="screen" id="s5">
+  <nav class="breadnav">
+    <span class="breadcrumb-back" onclick="go('s2')">← Work queue</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-item" onclick="go('s2')">Computer Science</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-item" onclick="go('s3')">BSCS Year 1</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-item current">Publish review</span>
+    <div class="breadnav-actions">
+      <button class="btn btn-sm">Save draft</button>
+      <button class="btn btn-dark btn-sm" onclick="go('s6')">Publish cohort →</button>
+    </div>
+  </nav>
+  <div class="page-body">
+    <div class="page-content">
+      <div class="status-banner success">
+        <div class="status-banner-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="status-banner-text">All conflicts resolved — ready to publish</div>
+          <div class="status-banner-sub">BSCS Year 1 · Easter 2026 · 5 course units · 92 students</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text-1);">Cohort summary</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:2px;">Course units scheduled for this cohort</div>
+          </div>
+          <span class="badge badge-neutral">5 units</span>
+        </div>
+        <div class="cohort-table-wrap">
+          <table class="cohort-table">
+            <thead>
+              <tr>
+                <th>Course unit</th>
+                <th>Slot</th>
+                <th style="text-align:right;">Room · Lecturer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight:500;">CSC 1101 — Intro to CS</td>
+                <td><div class="slot-chips"><span class="slot-chip">Mon 8:00</span><span class="slot-chip">Wed</span></div></td>
+                <td style="text-align:right;color:var(--text-3);">LT1 · Dr. Nakato</td>
+              </tr>
+              <tr>
+                <td style="font-weight:500;">MAT 1101 — Calculus I</td>
+                <td><div class="slot-chips"><span class="slot-chip">Tue 9:00</span><span class="slot-chip">Thu</span></div></td>
+                <td style="text-align:right;color:var(--text-3);">LT2 · Dr. Atim</td>
+              </tr>
+              <tr>
+                <td style="font-weight:500;">CSC 1201 — Programming I</td>
+                <td><div class="slot-chips"><span class="slot-chip">Tue</span><span class="slot-chip">Lab Fri 8:00</span></div></td>
+                <td style="text-align:right;color:var(--text-3);">LAB1 · Dr. Okullo</td>
+              </tr>
+              <tr>
+                <td style="font-weight:500;">CSC 1301 — Discrete Maths</td>
+                <td><div class="slot-chips"><span class="slot-chip">Wed 14:00</span><span class="slot-chip">Fri</span></div></td>
+                <td style="text-align:right;color:var(--text-3);">LT3 · Dr. Ssemakula</td>
+              </tr>
+              <tr>
+                <td style="font-weight:500;">GED 1101 — Communication</td>
+                <td><div class="slot-chips"><span class="slot-chip">Thu</span></div></td>
+                <td style="text-align:right;color:var(--text-3);">LT4 · Dr. Kiiza</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="consequences-card">
+        <div class="consequences-header">
+          <div class="consequences-title">On publish, the following will happen automatically</div>
+          <div class="consequences-sub">These actions cannot be undone without republishing</div>
+        </div>
+        <div class="consequence-item">
+          <div class="check-box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <div class="consequence-text">92 students can view their timetable</div>
+            <div class="consequence-sub">Visible in the student portal immediately</div>
+          </div>
+        </div>
+        <div class="consequence-item">
+          <div class="check-box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <div class="consequence-text">5 lecturers notified of their schedule</div>
+            <div class="consequence-sub">Dr. Nakato, Dr. Atim, Dr. Okullo, Dr. Ssemakula, Dr. Kiiza</div>
+          </div>
+        </div>
+        <div class="consequence-item">
+          <div class="check-box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <div class="consequence-text">Room bookings locked in the room system</div>
+            <div class="consequence-sub">LT1, LT2, LT3, LT4, LAB1 reserved for this cohort's slots</div>
+          </div>
+        </div>
+        <div class="consequence-item">
+          <div class="check-box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <div class="consequence-text">Alpha-MIS notified via SchedulePublished event</div>
+            <div class="consequence-sub">ACL forwards the event to the main system</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn-banner">
+        <div class="warn-title">Note — lecturer preferences not captured</div>
+        <div class="warn-body">2 lecturers have informal scheduling preferences on file with the support team. These were not factored into this draft. Review manually if needed before publishing.</div>
+      </div>
+
+      <div style="font-size:12px;color:var(--text-4);text-align:center;padding:20px 0 8px;">BSCS Year 1 · Easter 2026 · draft generated 2h ago</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 6: PUBLISH REVIEW (DEPT) ===================== -->
+<div class="screen" id="s6">
+  <nav class="breadnav">
+    <span class="breadcrumb-back" onclick="go('s2')">← Computer Science</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-item current">Publish review</span>
+    <div class="breadnav-actions">
+      <button class="btn btn-sm">Save draft</button>
+      <button class="btn btn-dark btn-sm">Publish department →</button>
+    </div>
+  </nav>
+  <div class="page-body">
+    <div class="page-content">
+      <div class="dept-header-card" style="margin-bottom:20px;">
+        <div style="display:flex;gap:14px;align-items:center;">
+          <div class="dept-header-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="5" width="16" height="12" rx="2" stroke="#6B7280" stroke-width="1.5"/><path d="M8 18h6M11 17v1" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div class="dept-header-name">Computer Science</div>
+            <div class="dept-header-sub">Semester 2 · 2025/26 · 5 cohorts · 24 course units</div>
+            <div style="margin-top:6px;font-size:13px;color:var(--success);font-weight:500;">✓ All conflicts resolved — ready to publish</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;font-weight:600;color:var(--text-4);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Cohort summary</div>
+      <div class="cohort-grid" style="margin-bottom:20px;">
+        <div class="cohort-summary-card">
+          <div class="cohort-summary-name">BSCS 1:1</div>
+          <div class="cohort-summary-tags">
+            <span class="badge badge-neutral">5 units</span>
+            <span class="badge badge-success">No conflicts</span>
+            <span style="font-size:12px;color:var(--text-3);align-self:center;">42 students</span>
+          </div>
+        </div>
+        <div class="cohort-summary-card">
+          <div class="cohort-summary-name">BSCS 2:2</div>
+          <div class="cohort-summary-tags">
+            <span class="badge badge-neutral">5 units</span>
+            <span class="badge badge-amber">1 resolved</span>
+            <span style="font-size:12px;color:var(--text-3);align-self:center;">92 students</span>
+          </div>
+        </div>
+        <div class="cohort-summary-card">
+          <div class="cohort-summary-name">BSCS 3:1</div>
+          <div class="cohort-summary-tags">
+            <span class="badge badge-neutral">5 units</span>
+            <span class="badge badge-success">No conflicts</span>
+            <span style="font-size:12px;color:var(--text-3);align-self:center;">38 students</span>
+          </div>
+        </div>
+        <div class="cohort-summary-card">
+          <div class="cohort-summary-name">BSIT 1:1</div>
+          <div class="cohort-summary-tags">
+            <span class="badge badge-neutral">5 units</span>
+            <span class="badge badge-amber">2 resolved</span>
+            <span style="font-size:12px;color:var(--text-3);align-self:center;">55 students</span>
+          </div>
+        </div>
+        <div class="cohort-summary-card">
+          <div class="cohort-summary-name">BSIT 2:1</div>
+          <div class="cohort-summary-tags">
+            <span class="badge badge-neutral">4 units</span>
+            <span class="badge badge-success">No conflicts</span>
+            <span style="font-size:12px;color:var(--text-3);align-self:center;">47 students</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="consequences-card">
+        <div class="consequences-header">
+          <div class="consequences-title">On publish, the following will happen automatically</div>
+        </div>
+        <div class="consequence-item">
+          <div class="check-box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <div class="consequence-text">All 274 students in this dept can view their timetable</div>
+          </div>
+        </div>
+        <div class="consequence-item">
+          <div class="check-box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <div class="consequence-text">All 18 lecturers can view their assigned schedule</div>
+          </div>
+        </div>
+        <div class="consequence-item">
+          <div class="check-box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <div class="consequence-text">Room bookings locked in the room management system</div>
+          </div>
+        </div>
+        <div class="consequence-item">
+          <div class="check-box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div>
+            <div class="consequence-text">Alpha-MIS notified via SchedulePublished event</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn-banner">
+        <div class="warn-title">Note — lecturer preferences not captured</div>
+        <div class="warn-body">3 lecturers have informal scheduling preferences on file with the support team. These were not factored into this draft. Review manually if needed before publishing.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

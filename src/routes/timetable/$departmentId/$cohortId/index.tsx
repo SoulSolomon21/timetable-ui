@@ -6,6 +6,7 @@ import { FilterSwitcher } from '@/features/calendar/components/header/FilterSwit
 import { TimetableWeekView } from '@/features/calendar/components/week-and-day-view/TimetableWeekView'
 import { TimetableProvider } from '@/features/calendar/contexts/TimetableContext'
 import { MOCK_LECTURERS, MOCK_PROGRAMS, MOCK_ROOMS, MOCK_SLOTS } from '@/features/calendar/mocks'
+import CalendarWeekView from '@/features/my-calendar/components/week-view/calendar-week-view'
 
 export const Route = createFileRoute('/timetable/$departmentId/$cohortId/')({
   component: TimetableGridPage,
@@ -37,8 +38,17 @@ function TimetableGridPage() {
             </div>
             <ConflictPanel />
           </div>
+          <CalendarWeekView />
         </div>
       </TimetableProvider>
     </TimetableDndProvider>
   )
 }
+
+function Playground() {
+  return (
+    <CalendarWeekView />
+  )
+}
+
+export default Playground

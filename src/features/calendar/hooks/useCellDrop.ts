@@ -68,7 +68,7 @@ export function useCellDrop({
       const newEndTime
         = endPeriodIdx < periods.length
           ? periods[endPeriodIdx].startTime
-          : (periods.at(-1)?.endTime ?? periods[periods.length - 1].endTime)
+          : (periods.at(-1)?.endTime ?? periods.at(-1).endTime)
 
       // 1. Optimistic update — moves the card instantly in the UI
       rescheduleSlot(item.slotId, dayOfWeek, newStartTime, newEndTime)
